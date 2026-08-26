@@ -67,6 +67,11 @@
   .saf-slice{
     fill:var(--line);
   }
+  .private-slice{
+    fill:var(--box-fill);
+    stroke:var(--line);
+    stroke-width:1;
+  }
   .controls{
     margin-top:20px;
     display:flex;
@@ -95,7 +100,7 @@
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
-  <div id="stage-label">Stage 1 of 4 — CFP template, as published</div>
+  <div id="stage-label">Stage 1 of 5 — CFP template, as published</div>
 
   <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
     <!-- Outer container: Blended Finance Structure -->
@@ -167,9 +172,17 @@
   const svgNS = "http://www.w3.org/2000/svg";
   const diagram = document.getElementById("diagram");
 
-  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 34, gapX: 14, gapY: 14, startX: 560, startY: 65 };
+  // boxH has extra headroom (beyond what the stage-4 SAF slice alone
+  // needs) to fit the stage-5 Private Capital band underneath it without
+  // touching the SAF slice's own position/size.
+  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 48, gapX: 14, gapY: 14, startX: 560, startY: 65 };
   const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 60 };
   const sliceWidth = SLICE_ORIGIN.w / 15;
+  // Private Capital's resting spot from stage 2 onward: same box, translated
+  // down (y + 185, per the stage1 tween below) — used as the fly-out origin
+  // for the stage-5 private-capital slices.
+  const PRIVATE_ORIGIN = { x: 190, y: 65 + 185, w: 310, h: 60 };
+  const privateSliceWidth = PRIVATE_ORIGIN.w / 15;
   const gridRight = GRID.startX + GRID.cols * (GRID.boxW + GRID.gapX) - GRID.gapX;
   const gridBottom = GRID.startY + GRID.rows * (GRID.boxH + GRID.gapY) - GRID.gapY;
 
@@ -181,7 +194,11 @@
     const y = GRID.startY + row * (GRID.boxH + GRID.gapY);
     PROJECTS.push({
       index: i, x, y,
-      sliceX: x + 8, sliceY: y + 19, sliceW: GRID.boxW - 16, sliceH: 11
+      // SAF Capital slice (stage 4) — unchanged from before.
+      sliceX: x + 8, sliceY: y + 19, sliceW: GRID.boxW - 16, sliceH: 11,
+      // Private Capital slice (stage 5) — a distinct band below the SAF
+      // slice, same horizontal inset, not touching it.
+      privateX: x + 8, privateY: y + 34, privateW: GRID.boxW - 16, privateH: 10
     });
   }
 
@@ -212,6 +229,18 @@
   prorataNote.textContent = "(pro rata split shown for both tranches — Senior Debt's behavior at project level is to confirm)";
   diagram.appendChild(prorataNote);
 
+  // Stage 5 clarifying note, stacked below the pro-rata note (not
+  // overlapping it): Private Capital's slices are a separate layer, not
+  // part of SAF's own capital structure.
+  const privateNote = svgEl("text", {
+    x: (GRID.startX + gridRight) / 2, y: gridBottom + 37,
+    "font-size": 11, fill: "#5B6B6E", "text-anchor": "middle"
+  });
+  privateNote.id = "private-capital-note";
+  privateNote.style.opacity = 0;
+  privateNote.textContent = "(private capital raised independently by each Local Partner — not part of SAF's own capital structure)";
+  diagram.appendChild(privateNote);
+
   // 15 project boxes
   PROJECTS.forEach(p => {
     const g = svgEl("g", {});
@@ -236,6 +265,21 @@
       width: sliceWidth, height: SLICE_ORIGIN.h, rx: 1
     });
     slice.id = `saf-slice-${p.index}`;
+    slice.style.opacity = 0;
+    diagram.appendChild(slice);
+  });
+
+  // 15 Private Capital slices — same even 1/15th split, starting as equal
+  // strips filling Private Capital's parked footprint, then flying out to
+  // land as a distinct (hollow-style) band under each SAF slice. Kept as
+  // separate elements from .saf-slice throughout — they never merge.
+  PROJECTS.forEach(p => {
+    const slice = svgEl("rect", {
+      class: "private-slice",
+      x: PRIVATE_ORIGIN.x + p.index * privateSliceWidth, y: PRIVATE_ORIGIN.y,
+      width: privateSliceWidth, height: PRIVATE_ORIGIN.h, rx: 1
+    });
+    slice.id = `private-slice-${p.index}`;
     slice.style.opacity = 0;
     diagram.appendChild(slice);
   });
@@ -289,14 +333,33 @@
     }, `stage3+=${2.8 + i * 0.04}`);
   });
 
-  tl.addLabel("stage4");
+  tl.addLabel("stage4")
+    // Stage 4 -> 5: Private Capital — parked outside the structure since
+    // stage 2, untouched since — splits into 15 equal pieces and flies to
+    // the portfolio grid, landing as a distinct layer alongside (not
+    // merged into) each project's SAF Capital slice. Mirrors the stage 4
+    // split/flyout pacing: source box fades as its slices appear, then
+    // the slices fly out staggered.
+    .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage4+=0.3")
+    .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage4+=0.3")
+    .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage4+=0.7");
 
-  const stages = ["stage1", "stage2", "stage3", "stage4"];
+  PROJECTS.forEach((p, i) => {
+    tl.to(`#private-slice-${i}`, {
+      attr: { x: p.privateX, y: p.privateY, width: p.privateW, height: p.privateH },
+      duration: 0.9
+    }, `stage4+=${0.5 + i * 0.04}`);
+  });
+
+  tl.addLabel("stage5");
+
+  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5"];
   const stageText = {
-    stage1: "Stage 1 of 4 — CFP template, as published",
-    stage2: "Stage 2 of 4 — Private Capital pulled out of the Blended Finance Structure",
-    stage3: "Stage 3 of 4 — Senior Debt / Junior Debt fill the vacated column",
-    stage4: "Stage 4 of 4 — Portfolio split: SAF capital divides pro rata across 15 projects"
+    stage1: "Stage 1 of 5 — CFP template, as published",
+    stage2: "Stage 2 of 5 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 5 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 5 — Portfolio split: SAF capital divides pro rata across 15 projects",
+    stage5: "Stage 5 of 5 — Private Capital splits pro rata, layering local capital onto each project"
   };
 
   let current = 0;
