@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAF / KOICA Proposal — Comparator Fund Diagrams</title>
+<style>
+  :root{
+    --bg:#F7F5F1;
+    --ink:#1F2A2E;
+    --ink-soft:#5B6B6E;
+    --line:#D8D3C8;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    padding:0 0 80px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 32px;}
+
+  .cover{
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    padding:40px 32px 28px;
+    margin-bottom:8px;
+  }
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-size:28px;
+    margin:0 0 12px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    max-width:760px;
+  }
+  .cover p{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    max-width:680px;
+  }
+
+  section.chapter{
+    background:var(--card);
+    margin:28px auto;
+    max-width:880px;
+    padding:32px 44px;
+    border:1px solid var(--line);
+    border-radius:6px;
+  }
+  .diagram-embed{
+    margin:22px 0 6px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:var(--card);
+  }
+  .diagram-embed .frame-label{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:#EFEBE3;
+    padding:8px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .diagram-embed iframe{
+    width:100%;
+    border:none;
+    display:block;
+  }
+
+  footer.doc-footer{
+    max-width:880px;
+    margin:40px auto 0;
+    padding:0 44px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="eyebrow">CRS / Acorn / SAF &middot; KOICA IPS Grant Proposal</div>
+    <h1 class="title">Comparator fund diagrams</h1>
+    <p>Four diagrams comparing SAF's structure against precedent funds, extracted from the full colleague-facing walkthrough for standalone reference.</p>
+    <p>These four diagrams place SAF within the landscape of comparable blended-finance vehicles. FASA and MSLF2 mark the two ends of a spectrum: FASA shows an all-public capital structure with private mobilization pushed downstream, while MSLF2 shows the opposite — direct private co-investment, made possible only because its underlying revenue is already mature. AgDevCo then validates SAF's own capital-stack design specifically, showing donor capital absorbing first-loss risk to crowd in DFI capital — a structure SAF mirrors. LCF closes the sequence as the closest same-asset-class comparator, offering the sharpest and most specific contrast: a carbon-agroforestry fund operating in the same space as SAF, but with a different approach to carbon value flow and generation risk.</p>
+  </div>
+</div>
+
+<section class="chapter" id="fasa">
+  <div class="diagram-embed">
+    <div class="frame-label">Diagram &middot; FASA vs. SAF — where private capital enters</div>
+    <iframe id="frame-fasa" height="760" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="chapter" id="mslf2">
+  <div class="diagram-embed">
+    <div class="frame-label">Diagram &middot; MSLF2 vs. SAF — capital stack (the "ceiling case")</div>
+    <iframe id="frame-mslf2" height="700" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="chapter" id="agdevco">
+  <div class="diagram-embed">
+    <div class="frame-label">Diagram &middot; AgDevCo vs. SAF — capital stack (donor capital crowds in DFI capital)</div>
+    <iframe id="frame-agdevco" height="700" loading="lazy"></iframe>
+  </div>
+</section>
+
+<section class="chapter" id="lcf">
+  <div class="diagram-embed">
+    <div class="frame-label">Diagram &middot; LCF vs. SAF — where carbon value flows, and who absorbs generation risk</div>
+    <iframe id="frame-lcf" height="880" loading="lazy"></iframe>
+  </div>
+</section>
+
+<footer class="doc-footer">
+  Comparator diagrams only &middot; extracted from the full colleague-facing walkthrough &middot; CRS / Acorn / SAF KOICA IPS proposal
+</footer>
+
+<script>
+document.getElementById('frame-fasa').srcdoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FASA vs SAF — Where Private Capital Enters</title>
+<style>
+  :root{
+    --bg:#F7F5F1;
+    --ink:#1F2A2E;
+    --ink-soft:#5B6B6E;
+    --line:#D8D3C8;
+    --donor:#C99A3B;
+    --donor-soft:#F3E4C0;
+    --dfi:#2F6F6B;
+    --dfi-soft:#DCEAE8;
+    --private:#8C4A3B;
+    --private-soft:#F0DAD3;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    padding:48px 32px 60px;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:27px;
+    margin:0 0 10px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+    max-width:680px;
+    line-height:1.55;
+    margin-bottom:40px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:44px;
+  }
+  .col{display:flex;flex-direction:column;align-items:center;}
+  .col-title{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .col-sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+    text-align:center;
+  }
+
+  .boundary{
+    width:100%;
+    border:1.5px dashed var(--ink-soft);
+    border-radius:10px;
+    padding:16px;
+    position:relative;
+    margin-bottom:6px;
+  }
+  .boundary-label{
+    position:absolute;
+    top:-9px;
+    left:14px;
+    background:var(--bg);
+    padding:0 8px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  .node{
+    border-radius:6px;
+    padding:13px 14px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    text-align:center;
+  }
+  .node .nname{font-size:13.5px;font-weight:700;line-height:1.35;}
+  .node .ndesc{font-size:10.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
+
+  .n-donor{background:var(--donor-soft);border:1.5px solid var(--donor);min-height:96px;display:flex;flex-direction:column;justify-content:center;}
+  .n-donor .nname{color:var(--donor);}
+  .n-dfi{background:var(--dfi-soft);border:1.5px solid var(--dfi);margin-top:6px;}
+  .n-dfi .nname{color:var(--dfi);}
+
+  .flow-arrow{
+    display:flex;
+    justify-content:center;
+    margin:8px 0;
+  }
+
+  .n-portfolio{
+    background:var(--card);
+    border:1.5px solid var(--ink-soft);
+    width:100%;
+    margin-bottom:6px;
+    min-height:96px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .n-portfolio .nname{color:var(--ink);}
+
+  .n-private{
+    background:var(--private-soft);
+    border:1.5px solid var(--private);
+    width:100%;
+    min-height:96px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .n-private .nname{color:var(--private);}
+
+  .caption{
+    margin-top:16px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    line-height:1.5;
+    max-width:300px;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  footer b{color:var(--ink);}
+
+  .sources{
+    margin-top:18px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .sources a{color:var(--dfi);text-decoration:none;border-bottom:1px solid var(--dfi-soft);}
+  .sources a:hover{border-bottom-color:var(--dfi);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Blended Finance Precedent</div>
+  <h1>Private capital enters downstream, not inside the fund</h1>
+  <div class="sub">The dashed line marks the fund's own boundary. In both FASA and SAF, public capital sits inside it — private capital appears once that capital has been deployed into the portfolio below.</div>
+
+  <div class="grid">
+
+    <div class="col">
+      <div class="col-title">FASA</div>
+      <div class="col-sub">Precedent</div>
+
+      <div class="boundary">
+        <div class="boundary-label">Fund</div>
+        <div class="node n-donor">
+          <div class="nname">Public Capital</div>
+          <div class="ndesc">Norway &middot; USAID &middot; FCDO &middot; KOICA &middot; Small Foundation</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+
+      <div class="node n-portfolio">
+        <div class="nname">Portfolio</div>
+        <div class="ndesc">Underlying investment funds FASA capitalizes (e.g. Catalyst Fund)</div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#8C4A3B" stroke-width="1.4" fill="none"/></svg>
+      </div>
+
+      <div class="node n-private">
+        <div class="nname">Private Capital Mobilized</div>
+        <div class="ndesc">Co-investors attracted into the underlying funds themselves</div>
+      </div>
+
+      <div class="caption">FASA's own capitalization is entirely public. Leverage is claimed at the underlying-fund level, not at FASA.</div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">SAF</div>
+      <div class="col-sub">This proposal</div>
+
+      <div class="boundary">
+        <div class="boundary-label">Fund</div>
+        <div class="node n-donor">
+          <div class="nname">Public Capital</div>
+          <div class="ndesc">KOICA &middot; USAID &middot; IFC &middot; FMO &middot; IFAD — donor and DFI/MDB capital</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+
+      <div class="node n-portfolio">
+        <div class="nname">Portfolio</div>
+        <div class="ndesc">15 Local Partner agroforestry projects financed by SAF</div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#8C4A3B" stroke-width="1.4" fill="none"/></svg>
+      </div>
+
+      <div class="node n-private">
+        <div class="nname">Private Capital Mobilized</div>
+        <div class="ndesc">Financing based on long-term offtake agreements for the portfolio's carbon removals</div>
+      </div>
+
+      <div class="caption">SAF's own capitalization is entirely public, donor and DFI. Leverage is claimed at the project/CRU level, not at SAF.</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <b>The point:</b> in both vehicles, private capital is mobilized through the portfolio's activity, not through co-investment inside the fund itself. FASA is a KOICA-backed precedent for this same mobilization pattern.
+    <br><br>
+    Neither FASA nor SAF can raise commercial private capital directly at this stage — the underlying assets are still too unproven for a private investor to price into the fund itself. Routing mobilization downstream also lets private capital match to the specific risk of each project rather than one blended profile across the whole portfolio.
+  </footer>
+  <div class="sources">
+    FASA sources: <a href="https://www.fasafund.com/" target="_blank">FASA Fund — official site</a> &middot; <a href="https://ndcpartnership.org/knowledge-portal/climate-funds-explorer/financing-agricultural-smes-africa-fasa" target="_blank">NDC Partnership, Climate Funds Explorer — FASA</a>
+  </div>
+</div>
+</body>
+</html>
+`;
+document.getElementById('frame-mslf2').srcdoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MSLF2 vs SAF — Capital Stack</title>
+<style>
+  :root{
+    --bg:#F7F5F1;
+    --ink:#1F2A2E;
+    --ink-soft:#5B6B6E;
+    --line:#D8D3C8;
+    --donor:#C99A3B;
+    --donor-soft:#F3E4C0;
+    --dfi:#2F6F6B;
+    --dfi-soft:#DCEAE8;
+    --private:#8C4A3B;
+    --private-soft:#F0DAD3;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    padding:48px 32px 60px;
+  }
+  .wrap{max-width:840px;margin:0 auto;}
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:27px;
+    margin:0 0 10px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+    max-width:640px;
+    line-height:1.55;
+    margin-bottom:36px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  .col{display:flex;flex-direction:column;align-items:center;}
+  .col-title{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .col-sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:20px;
+    text-align:center;
+  }
+
+  .stack{
+    width:100%;
+    height:340px;
+    display:flex;
+    flex-direction:column-reverse;
+    gap:3px;
+  }
+  .layer{
+    border-radius:4px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px 14px;
+  }
+  .layer .lname{font-size:13.5px;font-weight:700;line-height:1.35;}
+
+  .l-private{background:var(--private-soft);border:1.5px solid var(--private);flex:1;}
+  .l-private .lname{color:var(--private);}
+  .l-dfi{background:var(--dfi-soft);border:1.5px solid var(--dfi);flex:1;}
+  .l-dfi .lname{color:var(--dfi);}
+  .l-donor{background:var(--donor-soft);border:1.5px solid var(--donor);flex:1;}
+  .l-donor .lname{color:var(--donor);}
+
+  .l-empty{
+    background:transparent;
+    border:1.5px dashed var(--ink-soft);
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .l-empty .lname{color:var(--ink-soft);font-weight:600;font-style:italic;}
+
+  .caption{
+    margin-top:16px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    line-height:1.5;
+    max-width:300px;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  footer b{color:var(--ink);}
+
+  .sources{
+    margin-top:18px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .sources a{color:var(--dfi);text-decoration:none;border-bottom:1px solid var(--dfi-soft);}
+  .sources a:hover{border-bottom-color:var(--dfi);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Blended Finance Comparison</div>
+  <h1>Private capital enters the fund once revenue is established</h1>
+  <div class="sub">MSLF2 shows what's possible when the underlying revenue is mature, certified commodity and forestry value chains: institutional private capital sits directly inside the fund. SAF's underlying revenue — unverified carbon removals — doesn't yet support that.</div>
+
+  <div class="grid">
+
+    <div class="col">
+      <div class="col-title">MSLF2</div>
+      <div class="col-sub">The ceiling case</div>
+      <div class="stack">
+        <div class="layer l-donor">
+          <div class="lname">Donors<br>SIFI (junior/first-loss)</div>
+        </div>
+        <div class="layer l-dfi">
+          <div class="lname">DFIs<br>FMO &middot; Proparco</div>
+        </div>
+        <div class="layer l-private">
+          <div class="lname">Private Capital<br>Allianz &middot; BNP Paribas Cardif &middot; Abeille Assurances</div>
+        </div>
+      </div>
+      <div class="caption">Institutional insurers invest directly in the fund because the underlying revenue — certified forestry and agricultural value chains — is already established.</div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">SAF</div>
+      <div class="col-sub">This proposal</div>
+      <div class="stack">
+        <div class="layer l-donor">
+          <div class="lname">Donors<br>KOICA &middot; USAID</div>
+        </div>
+        <div class="layer l-dfi">
+          <div class="lname">DFIs / MDBs<br>IFC &middot; FMO &middot; IFAD</div>
+        </div>
+        <div class="layer l-empty">
+          <div class="lname">No private capital in the fund</div>
+        </div>
+      </div>
+      <div class="caption">Private capital cannot yet sit inside SAF's own structure — the underlying revenue, verified carbon removals, doesn't exist until projects mature.</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <b>The point:</b> MSLF2 also relies on concessional capital — a GCF-backed junior tranche anchored by SIFI, absorbing first-loss risk the same way SAF's junior tranche does. The difference is not that MSLF2 needs less concessional support; it's that MSLF2's underlying revenue is mature enough that institutional private capital is willing to sit directly in the fund alongside that concessional layer. SAF finances the years before an agroforestry project has anything to sell, so private capital cannot yet join at the fund level on the same terms.
+  </footer>
+  <div class="sources">
+    MSLF2 sources: <a href="https://www.im.natixis.com/en-intl/about/investment-manager-news/2025/mirova-mobilises-a-blended-finance-coalition-for-its-second-generation-fund-dedicated-to-sustainable-land-use-in-the-global-south" target="_blank">Natixis Investment Managers, "Mirova mobilises a blended finance coalition for MSLF2"</a> &middot; <a href="https://www.fmo.nl/project-detail/64312" target="_blank">FMO, Project Detail — Mirova Sustainable Land Fund 2</a> &middot; <a href="https://cdn.climatepolicyradar.org/navigator/CIV/2025/mirova-sustainable-land-fund-2_fce1ad07e1ce80782ab031b15a286eb0.pdf" target="_blank">Green Climate Fund, FP263 Concept Note (confirms GCF-backed junior tranche)</a>
+  </div>
+</div>
+</body>
+</html>
+`;
+document.getElementById('frame-agdevco').srcdoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgDevCo vs SAF — Capital Stack</title>
+<style>
+  :root{
+    --bg:#F7F5F1;
+    --ink:#1F2A2E;
+    --ink-soft:#5B6B6E;
+    --line:#D8D3C8;
+    --donor:#C99A3B;
+    --donor-soft:#F3E4C0;
+    --dfi:#2F6F6B;
+    --dfi-soft:#DCEAE8;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    padding:48px 32px 60px;
+  }
+  .wrap{max-width:840px;margin:0 auto;}
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:28px;
+    margin:0 0 10px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+    max-width:640px;
+    line-height:1.55;
+    margin-bottom:36px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:start;
+  }
+  .col{display:flex;flex-direction:column;align-items:center;}
+  .col-title{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .col-sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:20px;
+    text-align:center;
+  }
+
+  .stack{
+    width:100%;
+    height:340px;
+    display:flex;
+    flex-direction:column-reverse;
+    gap:3px;
+  }
+  .layer{
+    border-radius:4px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px 14px;
+  }
+  .layer .lname{font-size:14.5px;font-weight:700;line-height:1.35;}
+
+  .l-dfi{background:var(--dfi-soft);border:1.5px solid var(--dfi);flex:2;}
+  .l-dfi .lname{color:var(--dfi);}
+  .l-donor{background:var(--donor-soft);border:1.5px solid var(--donor);flex:1;}
+  .l-donor .lname{color:var(--donor);}
+
+  .caption{
+    margin-top:16px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    line-height:1.5;
+    max-width:280px;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  footer b{color:var(--ink);}
+
+  .sources{
+    margin-top:18px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .sources a{color:var(--dfi);text-decoration:none;border-bottom:1px solid var(--dfi-soft);}
+  .sources a:hover{border-bottom-color:var(--dfi);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Blended Finance Precedent</div>
+  <h1>Donor capital crowds in DFI capital</h1>
+  <div class="sub">Same cap-table pattern in both vehicles: a donor-funded first-loss layer sits at the bottom, absorbing early risk so a larger layer of DFI / commercial-government capital can sit above it.</div>
+
+  <div class="grid">
+
+    <div class="col">
+      <div class="col-title">AgDevCo</div>
+      <div class="col-sub">Precedent</div>
+      <div class="stack">
+        <div class="layer l-donor">
+          <div class="lname">Donors<br>FCDO</div>
+        </div>
+        <div class="layer l-dfi">
+          <div class="lname">DFIs<br>BII &middot; Norfund &middot; U.S. DFC</div>
+        </div>
+      </div>
+      <div class="caption">FCDO's first-loss position is what allowed BII, Norfund, and DFC to co-invest on top.</div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">SAF</div>
+      <div class="col-sub">This proposal</div>
+      <div class="stack">
+        <div class="layer l-donor">
+          <div class="lname">Donors<br>KOICA &middot; USAID</div>
+        </div>
+        <div class="layer l-dfi">
+          <div class="lname">DFIs / MDBs<br>IFC &middot; FMO &middot; IFAD</div>
+        </div>
+      </div>
+      <div class="caption">The same mechanism: junior/grant capital absorbs first-loss so senior, larger-volume DFI capital can lend into SAF.</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <b>The point:</b> this is not a novel or untested structure. AgDevCo already demonstrates that donor capital in a first-loss position is what allows DFI capital to enter at meaningfully larger scale — the same mechanism SAF relies on to move from KOICA's grant contribution to the senior tranche that finances the Local Partner portfolio.
+  </footer>
+  <div class="sources">
+    AgDevCo sources: <a href="https://www.bii.co.uk/en/news-insight/news/agdevco-secures-90m-of-dfi-funding-to-further-invest-in-african-agribusinesses-to-deliver-jobs-incomes-and-food/" target="_blank">British International Investment, "AgDevCo secures $90m of DFI funding"</a> &middot; <a href="https://odi.org/en/publications/dfi-sponsorship-of-new-platforms-and-ventures-why-and-how/" target="_blank">ODI Global, "DFI sponsorship of new platforms and ventures: why and how?" (AgDevCo case study)</a>
+  </div>
+</div>
+</body>
+</html>
+`;
+document.getElementById('frame-lcf').srcdoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LCF vs SAF — Where Carbon Value Flows</title>
+<style>
+  :root{
+    --bg:#F7F5F1;
+    --ink:#1F2A2E;
+    --ink-soft:#5B6B6E;
+    --line:#D8D3C8;
+    --donor:#C99A3B;
+    --donor-soft:#F3E4C0;
+    --dfi:#2F6F6B;
+    --dfi-soft:#DCEAE8;
+    --private:#8C4A3B;
+    --private-soft:#F0DAD3;
+    --farmer:#4E6B3A;
+    --farmer-soft:#E3EBDB;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    padding:48px 32px 60px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:27px;
+    margin:0 0 10px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:14px;
+    color:var(--ink-soft);
+    max-width:680px;
+    line-height:1.55;
+    margin-bottom:40px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:44px;
+  }
+  .col{display:flex;flex-direction:column;align-items:center;}
+  .col-title{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .col-sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:24px;
+    text-align:center;
+  }
+
+  .node{
+    border-radius:6px;
+    padding:12px 14px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    text-align:center;
+    width:100%;
+    min-height:78px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .node .nname{font-size:13px;font-weight:700;line-height:1.35;}
+  .node .ndesc{font-size:10.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
+
+  .n-private{background:var(--private-soft);border:1.5px solid var(--private);}
+  .n-private .nname{color:var(--private);}
+  .n-donor{background:var(--donor-soft);border:1.5px solid var(--donor);}
+  .n-donor .nname{color:var(--donor);}
+  .n-neutral{background:var(--card);border:1.5px solid var(--ink-soft);}
+  .n-neutral .nname{color:var(--ink);}
+  .n-farmer{background:var(--farmer-soft);border:1.5px solid var(--farmer);}
+  .n-farmer .nname{color:var(--farmer);}
+
+  .flow-arrow{
+    display:flex;
+    justify-content:center;
+    margin:8px 0;
+  }
+
+  .loop-wrap{
+    position:relative;
+    width:100%;
+    padding:0 8px;
+  }
+  .loop-back{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin:8px 0;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:10.5px;
+    color:var(--private);
+    font-weight:600;
+  }
+
+  .caption{
+    margin-top:16px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    line-height:1.5;
+    max-width:300px;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  footer b{color:var(--ink);}
+
+  .caveat{
+    margin-top:14px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    font-style:italic;
+    border-left:2px solid var(--line);
+    padding-left:12px;
+  }
+
+  .sources{
+    margin-top:18px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .sources a{color:var(--dfi);text-decoration:none;border-bottom:1px solid var(--dfi-soft);}
+  .sources a:hover{border-bottom-color:var(--dfi);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Blended Finance Comparison</div>
+  <h1>Who absorbs the generation risk sets the price</h1>
+  <div class="sub">LCF's investors are corporates pursuing net-zero targets, buying credits before they're generated. The earlier a buyer commits — before generation, before verification — the more risk they absorb, and the steeper the discount to spot. SAF avoids pre-selling before generation, selling instead via a mix of long-term offtake agreements and spot sales.</div>
+
+  <div class="grid">
+
+    <div class="col">
+      <div class="col-title">Livelihoods Carbon Fund</div>
+      <div class="col-sub">High "private" share</div>
+
+      <div class="node n-private">
+        <div class="nname">Net-Zero Corporate Buyer</div>
+        <div class="ndesc">Danone &middot; Michelin &middot; Mars &middot; L'Occitane, purchasing credits toward their own net-zero targets</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-neutral">
+        <div class="nname">Large-Scale Project</div>
+        <div class="ndesc">e.g. 8,000 ha palm regeneration — commercial scale, no stated farmer benefit-share target</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-farmer">
+        <div class="nname">Credits Pre-Sold, Pre-Generation</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#8C4A3B" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-private">
+        <div class="nname">Discounted Forward Price</div>
+        <div class="ndesc">Buyer absorbs generation risk in exchange for a lower, locked-in price</div>
+      </div>
+
+      <div class="caption">The buyer takes on generation risk in exchange for a discount — a well-documented industry pattern for pre-issuance credits.</div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">SAF</div>
+      <div class="col-sub">This proposal</div>
+
+      <div class="node n-donor">
+        <div class="nname">Public Capital</div>
+        <div class="ndesc">KOICA &middot; USAID &middot; IFC &middot; FMO &middot; IFAD</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-neutral">
+        <div class="nname">Aggregated Smallholder Portfolio</div>
+        <div class="ndesc">15 Local Partner projects, ~0.9 ha avg. landholding — ~70% farmer benefit-share stated as core strategy</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#5B6B6E" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-farmer">
+        <div class="nname">Carbon Removals Verified</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="14" height="18"><path d="M7 0 V16 M2 12 L7 17 L12 12" stroke="#8C4A3B" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <div class="node n-private">
+        <div class="nname">Sold via Offtake &amp; Spot</div>
+        <div class="ndesc">No pre-sale before generation — sold via a mix of offtake agreements and spot, some discount to spot pricing, but smaller than a pre-generation forward sale</div>
+      </div>
+
+      <div class="caption">SAF sells via a mix of offtake agreements and spot sales, avoiding pre-generation forward sales.</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <b>The point:</b> in one documented case, buyers who locked in multi-year volumes ahead of generation secured discounts of 18-25% versus spot — the price of absorbing more risk. SAF avoids that steeper discount by not pre-selling before generation, preserving more value for farmers under its stated ~70% benefit-sharing target.
+    <br><br>
+    LCF's model works well for private investors because their role as buyer and as investor is the same relationship — the corporate gets the credits it needs for its own net-zero target, so the deal is attractive on its own terms. SAF's structure serves a different segment: aggregated smallholder projects where no single buyer has a reason to pre-commit, which is a harder segment to mobilize private capital into, and part of why concessional capital plays a bigger role.
+  </footer>
+  <div class="caveat">
+    Note: LCF's mission language references smallholder farmers and rural incomes generally, but LCF does not publish a specific farmer benefit-sharing percentage or name it as an investment screening criterion. SAF states a farmer benefit-sharing figure of approximately 70% as a stated part of its investment strategy. The distinction drawn here is about what each fund states and quantifies, not a claim that LCF ignores farmers entirely.
+  </div>
+  <div class="sources">
+    LCF sources: <a href="https://livelihoods.eu/climate-action/" target="_blank">Livelihoods Funds, "Climate Action"</a> &middot; <a href="https://ppp.worldbank.org/fund-liveligoods-carbon-fund-3" target="_blank">World Bank PPP, "Fund: Livelihoods Carbon Fund 3"</a> &middot; <a href="https://livelihoods.eu/cop27-10-key-learnings-from-livelihoods-high-carbon-projects/" target="_blank">Livelihoods Funds, "10 key learnings"</a>
+    <br>
+    Pricing pattern sources: <a href="https://www.regreener.earth/blog/spot-vs-forward-vs-offtake-carbon-credit-pricing-in-2026" target="_blank">Regreener, "Spot vs Forward vs Offtake: Carbon Credit Pricing"</a> &middot; <a href="https://www.weforum.org/stories/2025/04/carbon-dioxide-removal-carbon-credits/" target="_blank">World Economic Forum, "Why carbon dioxide removal will transform the carbon market"</a> (discount magnitude example)
+  </div>
+</div>
+</body>
+</html>
+`;
+</script>
+</body>
+</html>
