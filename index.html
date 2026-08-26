@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAF Blended Finance Structure — Morph</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{
+    --ink:#1F2A2E;
+    --line:#2F6FA8;
+    --box-fill:#FFFFFF;
+    --outer-fill:#FFFFFF;
+    --bg:#F7F5F1;
+  }
+  html,body{
+    margin:0;
+    padding:0;
+    background:var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);
+  }
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:32px 20px 60px;
+  }
+  h1{
+    font-size:20px;
+    margin:0 0 4px;
+  }
+  p.sub{
+    font-size:14px;
+    color:#5B6B6E;
+    margin:0 0 28px;
+  }
+  #stage-label{
+    font-size:13px;
+    font-weight:600;
+    color:var(--line);
+    margin-bottom:10px;
+    min-height:18px;
+  }
+  svg{
+    width:100%;
+    height:auto;
+    display:block;
+    background:var(--outer-fill);
+    border:1px solid #E3E0D6;
+    border-radius:6px;
+  }
+  .box-label{
+    font-size:13px;
+    font-weight:600;
+    text-anchor:middle;
+  }
+  .box-rect{
+    fill:var(--box-fill);
+    stroke:var(--line);
+    stroke-width:1.5;
+  }
+  .outer-rect{
+    fill:none;
+    stroke:var(--line);
+    stroke-width:1.5;
+  }
+  .saf-slice{
+    fill:var(--line);
+  }
+  .controls{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+  }
+  button{
+    font-size:13px;
+    padding:8px 16px;
+    border-radius:4px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--line);
+    cursor:pointer;
+  }
+  button:disabled{
+    opacity:0.4;
+    cursor:default;
+  }
+  button:hover:not(:disabled){
+    background:var(--line);
+    color:#fff;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SAF Blended Finance Structure</h1>
+  <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
+  <div id="stage-label">Stage 1 of 4 — CFP template, as published</div>
+
+  <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer container: Blended Finance Structure -->
+    <rect id="outer-box" class="outer-rect" x="20" y="20" width="500" height="200" rx="4"/>
+    <text x="270" y="45" class="box-label" font-size="14">Blended Finance Structure</text>
+
+    <!-- Technical Assistance Facility -->
+    <g id="ta-facility">
+      <rect class="box-rect" x="36" y="65" width="130" height="135" rx="3"/>
+      <text x="101" y="120" class="box-label">Technical</text>
+      <text x="101" y="138" class="box-label">Assistance</text>
+      <text x="101" y="156" class="box-label">Facility</text>
+    </g>
+
+    <!-- Senior Debt / Junior Debt: fill the column Private Capital
+         vacates, stacked (mirroring how Private Capital sat stacked
+         above First-Loss Capital). Hidden (opacity 0) until stage 3. -->
+    <g id="senior-debt" style="opacity:0">
+      <rect class="box-rect" x="190" y="65" width="310" height="26" rx="3"/>
+      <text x="345" y="82" class="box-label" font-size="12">Senior Debt</text>
+    </g>
+    <g id="junior-debt" style="opacity:0">
+      <rect class="box-rect" x="190" y="99" width="310" height="26" rx="3"/>
+      <text x="345" y="116" class="box-label" font-size="12">Junior Debt</text>
+    </g>
+
+    <!-- SAF Capital: Senior Debt / Junior Debt visually merge into this
+         single undifferentiated block in stage 4, before splitting
+         pro rata across the 15 project boxes. Hidden until then. -->
+    <g id="saf-capital-merged" style="opacity:0">
+      <rect class="box-rect" x="190" y="65" width="310" height="60" rx="3"/>
+      <text x="345" y="99" class="box-label">SAF Capital</text>
+    </g>
+
+    <!-- Private Capital: stage 1 position shown here. In stage 2 this
+         group is translated below the outer box (pulled out, not
+         deleted — it reappears, redefined, in a later stage). -->
+    <g id="private-capital">
+      <rect class="box-rect" x="190" y="65" width="310" height="60" rx="3"/>
+      <text x="345" y="90" class="box-label">Private Capital</text>
+      <text x="345" y="108" class="box-label" font-size="11">(senior debt or equity)</text>
+    </g>
+
+    <!-- First-Loss Capital -->
+    <g id="first-loss-capital">
+      <rect class="box-rect" x="190" y="140" width="310" height="60" rx="3"/>
+      <text x="345" y="175" class="box-label">First-Loss Capital</text>
+    </g>
+
+    <!-- Annotation shown once Private Capital is pulled out -->
+    <text id="pulled-out-note" x="345" y="325" font-size="11" fill="#5B6B6E" text-anchor="middle" style="opacity:0">(pulled out — moved outside the Blended Finance Structure)</text>
+  </svg>
+
+  <div class="controls">
+    <button id="prev-btn" disabled>&larr; Prev</button>
+    <button id="next-btn">Next &rarr;</button>
+  </div>
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // Stage 4 setup: build the 15-project portfolio grid + the SAF
+  // capital slices that will fly out to it. Generated at runtime
+  // (rather than hand-written 15x in markup) since all 15 are
+  // structurally identical. Everything starts hidden (opacity 0)
+  // and is faded/moved in by the timeline below.
+  // ---------------------------------------------------------------
+  const svgNS = "http://www.w3.org/2000/svg";
+  const diagram = document.getElementById("diagram");
+
+  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 34, gapX: 14, gapY: 14, startX: 560, startY: 65 };
+  const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 60 };
+  const sliceWidth = SLICE_ORIGIN.w / 15;
+  const gridRight = GRID.startX + GRID.cols * (GRID.boxW + GRID.gapX) - GRID.gapX;
+  const gridBottom = GRID.startY + GRID.rows * (GRID.boxH + GRID.gapY) - GRID.gapY;
+
+  const PROJECTS = [];
+  for (let i = 0; i < 15; i++) {
+    const col = i % GRID.cols;
+    const row = Math.floor(i / GRID.cols);
+    const x = GRID.startX + col * (GRID.boxW + GRID.gapX);
+    const y = GRID.startY + row * (GRID.boxH + GRID.gapY);
+    PROJECTS.push({
+      index: i, x, y,
+      sliceX: x + 8, sliceY: y + 19, sliceW: GRID.boxW - 16, sliceH: 11
+    });
+  }
+
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(svgNS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  // Portfolio label + provisional note (this stage resolves, for
+  // visualization purposes, an open question flagged elsewhere: whether
+  // Senior Debt flows to project level the same way Junior Debt does).
+  const portfolioLabel = svgEl("text", {
+    x: (GRID.startX + gridRight) / 2, y: GRID.startY - 15,
+    class: "box-label", "font-size": 14
+  });
+  portfolioLabel.id = "portfolio-label";
+  portfolioLabel.style.opacity = 0;
+  portfolioLabel.textContent = "Portfolio — 15 Projects";
+  diagram.appendChild(portfolioLabel);
+
+  const prorataNote = svgEl("text", {
+    x: (GRID.startX + gridRight) / 2, y: gridBottom + 20,
+    "font-size": 11, fill: "#5B6B6E", "text-anchor": "middle"
+  });
+  prorataNote.id = "prorata-note";
+  prorataNote.style.opacity = 0;
+  prorataNote.textContent = "(pro rata split shown for both tranches — Senior Debt's behavior at project level is to confirm)";
+  diagram.appendChild(prorataNote);
+
+  // 15 project boxes
+  PROJECTS.forEach(p => {
+    const g = svgEl("g", {});
+    g.setAttribute("class", "project-box");
+    g.id = `project-${p.index}`;
+    g.style.opacity = 0;
+    g.appendChild(svgEl("rect", {
+      class: "box-rect", x: p.x, y: p.y, width: GRID.boxW, height: GRID.boxH, rx: 3
+    }));
+    g.appendChild(svgEl("text", {
+      class: "box-label", "font-size": 9, x: p.x + GRID.boxW / 2, y: p.y + 13
+    })).textContent = `Project ${p.index + 1}`;
+    diagram.appendChild(g);
+  });
+
+  // 15 SAF capital slices — start as equal-width strips filling the
+  // merged capital block's footprint, then fly out to their project.
+  PROJECTS.forEach(p => {
+    const slice = svgEl("rect", {
+      class: "saf-slice",
+      x: SLICE_ORIGIN.x + p.index * sliceWidth, y: SLICE_ORIGIN.y,
+      width: sliceWidth, height: SLICE_ORIGIN.h, rx: 1
+    });
+    slice.id = `saf-slice-${p.index}`;
+    slice.style.opacity = 0;
+    diagram.appendChild(slice);
+  });
+
+  // ---------------------------------------------------------------
+  // Timeline. Each confirmed stage gets a label; Next/Prev step
+  // between labels with tl.tweenTo(). Add future stages by appending
+  // more tweens + addLabel("stageN") below stage 3.
+  // ---------------------------------------------------------------
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+
+  tl.addLabel("stage1")
+    // Stage 1 -> 2: Private Capital slides down, out of the Blended
+    // Finance Structure. Senior/Junior Debt stay hidden — nothing else
+    // happens yet.
+    .to("#private-capital", { y: 185, duration: 1 }, "stage1")
+    // Annotation clarifies Private Capital wasn't deleted, just relocated.
+    .to("#pulled-out-note", { opacity: 1, duration: 0.6 }, "stage1+=0.7")
+    .addLabel("stage2")
+    // Stage 2 -> 3: Senior Debt / Junior Debt fade into the now-vacant,
+    // stacked column. Nothing else moves.
+    .to("#senior-debt, #junior-debt", { opacity: 1, duration: 0.8 }, "stage2+=0.1")
+    .addLabel("stage3")
+    // Stage 3 -> 4a: the 15 project boxes appear to the right.
+    .to("#portfolio-label", { opacity: 1, duration: 0.5 }, "stage3+=0.1")
+    .to(".project-box", { opacity: 1, duration: 0.6, stagger: 0.03 }, "stage3+=0.1")
+    // Stage 3 -> 4b: Senior Debt / Junior Debt converge and crossfade
+    // into a single undifferentiated "SAF Capital" block.
+    .to("#senior-debt", { y: 17, duration: 0.6 }, "stage3+=1.1")
+    .to("#junior-debt", { y: -17, duration: 0.6 }, "stage3+=1.1")
+    .to("#senior-debt, #junior-debt", { opacity: 0, duration: 0.4 }, "stage3+=1.7")
+    .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage3+=1.7")
+    // Stage 3 -> 4c: the merged block splits into 15 equal (pro rata)
+    // slices, which fly out to land inside their project box.
+    .to("#saf-capital-merged", { opacity: 0, duration: 0.3 }, "stage3+=2.4")
+    .to(".saf-slice", { opacity: 1, duration: 0.3 }, "stage3+=2.4")
+    .to("#prorata-note", { opacity: 1, duration: 0.5 }, "stage3+=2.8");
+
+  PROJECTS.forEach((p, i) => {
+    // attr:{} is required here — plain x/y/width/height on a <rect>
+    // get treated as CSS pixel styles by GSAP, not SVG attributes.
+    tl.to(`#saf-slice-${i}`, {
+      attr: { x: p.sliceX, y: p.sliceY, width: p.sliceW, height: p.sliceH },
+      duration: 0.9
+    }, `stage3+=${2.6 + i * 0.04}`);
+  });
+
+  tl.addLabel("stage4");
+
+  const stages = ["stage1", "stage2", "stage3", "stage4"];
+  const stageText = {
+    stage1: "Stage 1 of 4 — CFP template, as published",
+    stage2: "Stage 2 of 4 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 4 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 4 — Portfolio split: SAF capital divides pro rata across 15 projects"
+  };
+
+  let current = 0;
+  const stageLabelEl = document.getElementById("stage-label");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+
+  function render() {
+    stageLabelEl.textContent = stageText[stages[current]];
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === stages.length - 1;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (current === 0) return;
+    current--;
+    tl.tweenTo(stages[current]);
+    render();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (current === stages.length - 1) return;
+    current++;
+    tl.tweenTo(stages[current]);
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
