@@ -72,6 +72,12 @@
     stroke:var(--line);
     stroke-width:1;
   }
+  .ta-slice{
+    fill:var(--box-fill);
+    stroke:var(--line);
+    stroke-width:1;
+    stroke-dasharray:2,1.5;
+  }
   .controls{
     margin-top:20px;
     display:flex;
@@ -100,7 +106,7 @@
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
-  <div id="stage-label">Stage 1 of 8 — CFP template, as published</div>
+  <div id="stage-label">Stage 1 of 10 — CFP template, as published</div>
 
   <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
     <!-- Outer container: Blended Finance Structure -->
@@ -141,19 +147,29 @@
       <polygon class="box-rect" points="238,201 462,201 434,167 266,167"/>
       <text x="350" y="188" text-anchor="middle" font-weight="600" font-size="10">Improved Livelihoods</text>
 
-      <polygon class="box-rect" points="266,167 434,167 406,133 294,133"/>
-      <text x="350" y="154" text-anchor="middle" font-weight="600" font-size="9">Local Adaptation</text>
+      <!-- Top three tiers are each wrapped in their own group so a later
+           stage can fade them down together (de-emphasize without
+           touching the bottom two, Agroforestry/Improved Livelihoods,
+           which stay at full weight). -->
+      <g id="pyramid-tier3">
+        <polygon class="box-rect" points="266,167 434,167 406,133 294,133"/>
+        <text x="350" y="154" text-anchor="middle" font-weight="600" font-size="9">Local Adaptation</text>
+      </g>
 
-      <polygon class="box-rect" points="294,133 406,133 378,99 322,99"/>
-      <text x="350" y="124" text-anchor="middle" font-weight="600" font-size="8">Regional Resilience</text>
+      <g id="pyramid-tier4">
+        <polygon class="box-rect" points="294,133 406,133 378,99 322,99"/>
+        <text x="350" y="124" text-anchor="middle" font-weight="600" font-size="8">Regional Resilience</text>
+      </g>
 
       <!-- Apex: true triangle (3 points, no flat top), base corners
            (322,99)/(378,99) sitting exactly on the same line as every
            tier below — text sits in the triangle's wider lower half
            since the pointed tip itself has no room for it. -->
-      <polygon class="box-rect" points="322,99 378,99 350,65"/>
-      <text x="350" y="88" text-anchor="middle" font-weight="600" font-size="7">Global</text>
-      <text x="350" y="96" text-anchor="middle" font-weight="600" font-size="7">Mitigation</text>
+      <g id="pyramid-tier5">
+        <polygon class="box-rect" points="322,99 378,99 350,65"/>
+        <text x="350" y="88" text-anchor="middle" font-weight="600" font-size="7">Global</text>
+        <text x="350" y="96" text-anchor="middle" font-weight="600" font-size="7">Mitigation</text>
+      </g>
     </g>
 
     <!-- Senior Debt / Junior Debt: fill the column Private Capital
@@ -220,10 +236,11 @@
   const svgNS = "http://www.w3.org/2000/svg";
   const diagram = document.getElementById("diagram");
 
-  // boxH has extra headroom (beyond what the stage-4 SAF slice alone
-  // needs) to fit the stage-5 Private Capital band underneath it without
-  // touching the SAF slice's own position/size.
-  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 48, gapX: 14, gapY: 14, startX: 560, startY: 65 };
+  // boxH has extra headroom beyond what the SAF + Private Capital bands
+  // need (stages 4/5) to also fit the stage-10 TA Facility band as a
+  // third stacked row, without touching the other two bands' own
+  // position/size.
+  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 58, gapX: 14, gapY: 14, startX: 560, startY: 65 };
   // Matches saf-capital-merged's full-column footprint (see markup) so the
   // pre-flyout strips fill the same size block they're splitting from.
   const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 135 };
@@ -233,6 +250,11 @@
   // for the stage-5 private-capital slices.
   const PRIVATE_ORIGIN = { x: 190, y: 65 + 185, w: 310, h: 60 };
   const privateSliceWidth = PRIVATE_ORIGIN.w / 15;
+  // TA Facility's resting spot from stage 7 onward: same box, translated
+  // down (y + 40, per the stage6 tween below) — used as the fly-out origin
+  // for the stage-10 TA pieces.
+  const TA_ORIGIN = { x: 36, y: 65 + 40, w: 130, h: 135 };
+  const taSliceWidth = TA_ORIGIN.w / 15;
   const gridRight = GRID.startX + GRID.cols * (GRID.boxW + GRID.gapX) - GRID.gapX;
   const gridBottom = GRID.startY + GRID.rows * (GRID.boxH + GRID.gapY) - GRID.gapY;
 
@@ -256,7 +278,12 @@
       // SAF Capital slice — sits directly beneath Private Capital, same
       // visual horizontal edges (see privateX/privateW above), touching
       // it with no gap (attached stacked pair).
-      sliceX: x + 8, sliceY: y + 29, sliceW: GRID.boxW - 16, sliceH: 11
+      sliceX: x + 8, sliceY: y + 29, sliceW: GRID.boxW - 16, sliceH: 11,
+      // TA Facility piece — a third band, distinct dashed style, sitting
+      // below the SAF slice with a small gap (not touching, not
+      // overlapping) since it represents a different kind of support
+      // (technical assistance, not capital) reaching the same project.
+      taX: x + 8, taY: y + 44, taW: GRID.boxW - 16, taH: 8
     });
   }
 
@@ -299,6 +326,18 @@
   privateNote.textContent = "(private capital raised independently by each Local Partner — not part of SAF's own capital structure)";
   diagram.appendChild(privateNote);
 
+  // Stage 10 clarifying note, stacked below the other two (not
+  // overlapping either): the TA piece at each project is the existing TA
+  // Facility reaching that project, not a capital instrument.
+  const taNote = svgEl("text", {
+    x: (GRID.startX + gridRight) / 2, y: gridBottom + 54,
+    "font-size": 11, fill: "#5B6B6E", "text-anchor": "middle"
+  });
+  taNote.id = "ta-piece-note";
+  taNote.style.opacity = 0;
+  taNote.textContent = "(dashed band: existing TA Facility support, reaching all 15 projects evenly — not a capital instrument)";
+  diagram.appendChild(taNote);
+
   // 15 project boxes
   PROJECTS.forEach(p => {
     const g = svgEl("g", {});
@@ -338,6 +377,21 @@
       width: privateSliceWidth, height: PRIVATE_ORIGIN.h, rx: 1
     });
     slice.id = `private-slice-${p.index}`;
+    slice.style.opacity = 0;
+    diagram.appendChild(slice);
+  });
+
+  // 15 TA Facility pieces — same even 1/15th split, starting as equal
+  // strips filling the detached TA Facility box's footprint, then flying
+  // out to land as a third, dashed-outline band under each project's
+  // SAF/Private pair. Kept separate from those classes throughout.
+  PROJECTS.forEach(p => {
+    const slice = svgEl("rect", {
+      class: "ta-slice",
+      x: TA_ORIGIN.x + p.index * taSliceWidth, y: TA_ORIGIN.y,
+      width: taSliceWidth, height: TA_ORIGIN.h, rx: 1
+    });
+    slice.id = `ta-slice-${p.index}`;
     slice.style.opacity = 0;
     diagram.appendChild(slice);
   });
@@ -439,18 +493,48 @@
     // detached TA Facility box. All five tiers at equal visual weight —
     // de-emphasizing individual tiers is a later sub-stage.
     .to("#ta-pyramid", { opacity: 1, duration: 0.8 }, "stage7+=0.2")
-    .addLabel("stage8");
+    .addLabel("stage8")
+    // Stage 8 -> 9: the upper three tiers (Local Adaptation, Regional
+    // Resilience, Global Mitigation) recede — a uniform opacity drop reads
+    // as "still legible, clearly secondary" without changing any tier's
+    // size/position/color values. Agroforestry and Improved Livelihoods
+    // (untouched) stay at full weight throughout.
+    .to("#pyramid-tier3, #pyramid-tier4, #pyramid-tier5", { opacity: 0.45, duration: 0.6 }, "stage8+=0.2")
+    .addLabel("stage9")
+    // Stage 9 -> 10: TA Facility — detached since stage 6->7, untouched
+    // since — splits into 15 equal pieces and flies to the portfolio
+    // grid, landing as a third, dashed-outline band beneath each
+    // project's SAF/Private pair (representing the existing TA Facility
+    // reaching all 15 projects evenly). The pyramid stays exactly where
+    // it is — a standalone explainer of what the aggregate TA Facility
+    // feeds into, not wired to each project-level piece. Mirrors the
+    // stage 5/6 split/flyout pacing: source box fades as its slices
+    // appear, then the slices fly out staggered.
+    .to("#ta-facility", { opacity: 0, duration: 0.3 }, "stage9+=0.3")
+    .to(".ta-slice", { opacity: 1, duration: 0.3 }, "stage9+=0.3")
+    .to("#ta-piece-note", { opacity: 1, duration: 0.5 }, "stage9+=0.7");
 
-  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8"];
+  PROJECTS.forEach((p, i) => {
+    tl.to(`#ta-slice-${i}`, {
+      attr: { x: p.taX, y: p.taY, width: p.taW, height: p.taH },
+      duration: 0.9
+    }, `stage9+=${0.5 + i * 0.04}`);
+  });
+
+  tl.addLabel("stage10");
+
+  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8", "stage9", "stage10"];
   const stageText = {
-    stage1: "Stage 1 of 8 — CFP template, as published",
-    stage2: "Stage 2 of 8 — Private Capital pulled out of the Blended Finance Structure",
-    stage3: "Stage 3 of 8 — Senior Debt / Junior Debt fill the vacated column",
-    stage4: "Stage 4 of 8 — Portfolio grid appears: 15 projects",
-    stage5: "Stage 5 of 8 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
-    stage6: "Stage 6 of 8 — Private Capital splits pro rata, layering local capital onto each project",
-    stage7: "Stage 7 of 8 — Technical Assistance Facility detaches into its own focused view",
-    stage8: "Stage 8 of 8 — TA Facility's 5-tier Theory of Change pyramid appears"
+    stage1: "Stage 1 of 10 — CFP template, as published",
+    stage2: "Stage 2 of 10 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 10 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 10 — Portfolio grid appears: 15 projects",
+    stage5: "Stage 5 of 10 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
+    stage6: "Stage 6 of 10 — Private Capital splits pro rata, layering local capital onto each project",
+    stage7: "Stage 7 of 10 — Technical Assistance Facility detaches into its own focused view",
+    stage8: "Stage 8 of 10 — TA Facility's 5-tier Theory of Change pyramid appears",
+    stage9: "Stage 9 of 10 — Upper three pyramid tiers recede, keeping focus on the base",
+    stage10: "Stage 10 of 10 — TA Facility splits pro rata, reaching all 15 projects evenly"
   };
 
   let current = 0;
