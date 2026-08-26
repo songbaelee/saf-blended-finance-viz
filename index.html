@@ -130,10 +130,11 @@
     <!-- SAF Capital: Senior Debt, Junior Debt, and First-Loss Capital all
          visually merge into this single undifferentiated block in stage 4,
          before splitting pro rata across the 15 project boxes. Hidden
-         until then. -->
+         until then. Sized to the full column footprint the three tranches
+         occupy together (y65-200), not just one tranche's share of it. -->
     <g id="saf-capital-merged" style="opacity:0">
-      <rect class="box-rect" x="190" y="65" width="310" height="60" rx="3"/>
-      <text x="345" y="99" class="box-label">SAF Capital</text>
+      <rect class="box-rect" x="190" y="65" width="310" height="135" rx="3"/>
+      <text x="345" y="137" class="box-label">SAF Capital</text>
     </g>
 
     <!-- Private Capital: stage 1 position shown here. In stage 2 this
@@ -176,7 +177,9 @@
   // needs) to fit the stage-5 Private Capital band underneath it without
   // touching the SAF slice's own position/size.
   const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 48, gapX: 14, gapY: 14, startX: 560, startY: 65 };
-  const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 60 };
+  // Matches saf-capital-merged's full-column footprint (see markup) so the
+  // pre-flyout strips fill the same size block they're splitting from.
+  const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 135 };
   const sliceWidth = SLICE_ORIGIN.w / 15;
   // Private Capital's resting spot from stage 2 onward: same box, translated
   // down (y + 185, per the stage1 tween below) — used as the fly-out origin
@@ -194,11 +197,13 @@
     const y = GRID.startY + row * (GRID.boxH + GRID.gapY);
     PROJECTS.push({
       index: i, x, y,
-      // SAF Capital slice (stage 4) — unchanged from before.
-      sliceX: x + 8, sliceY: y + 19, sliceW: GRID.boxW - 16, sliceH: 11,
-      // Private Capital slice (stage 5) — a distinct band below the SAF
-      // slice, same horizontal inset, not touching it.
-      privateX: x + 8, privateY: y + 34, privateW: GRID.boxW - 16, privateH: 10
+      // Private Capital slice (stage 5) — the top layer, both in position
+      // and stacking order (it's appended to the DOM after the SAF slice
+      // below, so it paints on top too).
+      privateX: x + 8, privateY: y + 19, privateW: GRID.boxW - 16, privateH: 10,
+      // SAF Capital slice (stage 4) — sits below Private Capital, same
+      // horizontal inset, not touching it.
+      sliceX: x + 8, sliceY: y + 34, sliceW: GRID.boxW - 16, sliceH: 11
     });
   }
 
@@ -300,22 +305,33 @@
     .to("#pulled-out-note", { opacity: 1, duration: 0.6 }, "stage1+=0.7")
     .addLabel("stage2")
     // Stage 2 -> 3: Senior Debt / Junior Debt fade into the now-vacant,
-    // stacked column. Nothing else moves.
+    // stacked column. At the same beat, the column redistributes: First-
+    // Loss Capital shrinks down to a subordinate-sized box and Senior /
+    // Junior Debt grow into the two large, roughly-equal boxes that now
+    // dominate the column (46 / 47 / 30 px of the same 135px column,
+    // top to bottom) — the column's full height doesn't change, just how
+    // it's divided among the three.
     .to("#senior-debt, #junior-debt", { opacity: 1, duration: 0.8 }, "stage2+=0.1")
+    .to("#senior-debt rect", { attr: { y: 65, height: 46 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#senior-debt text", { attr: { y: 92 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#junior-debt rect", { attr: { y: 117, height: 47 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#junior-debt text", { attr: { y: 144 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#first-loss-capital rect", { attr: { y: 170, height: 30 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#first-loss-capital text", { attr: { y: 189 }, duration: 0.8 }, "stage2+=0.1")
     .addLabel("stage3")
     // Stage 3 -> 4a: the 15 project boxes appear to the right.
     .to("#portfolio-label", { opacity: 1, duration: 0.5 }, "stage3+=0.1")
     .to(".project-box", { opacity: 1, duration: 0.6, stagger: 0.03 }, "stage3+=0.1")
     // Stage 3 -> 4b: Senior Debt, Junior Debt, AND First-Loss Capital all
     // converge and crossfade into a single undifferentiated "SAF Capital"
-    // block. First-Loss Capital starts lower and has further to travel,
-    // so it sets off earlier and takes longer, arriving on the same beat
-    // Senior/Junior have already met on (they're closer together and
-    // converge first; First-Loss catches up to complete the three-way
-    // merge).
-    .to("#senior-debt", { y: 17, duration: 0.6 }, "stage3+=1.1")
-    .to("#junior-debt", { y: -17, duration: 0.6 }, "stage3+=1.1")
-    .to("#first-loss-capital", { y: -75, duration: 1.0 }, "stage3+=0.9")
+    // block that now spans their full combined footprint. The three
+    // already tile that footprint contiguously (Junior anchors the middle;
+    // Senior and First-Loss each close their small gap toward it — First-
+    // Loss sets off earlier since it has to close a gap on top of being
+    // further away), so only a small closing nudge is needed before the
+    // crossfade into the single big block.
+    .to("#senior-debt", { y: 6, duration: 0.6 }, "stage3+=1.1")
+    .to("#first-loss-capital", { y: -6, duration: 1.0 }, "stage3+=0.9")
     .to("#senior-debt, #junior-debt, #first-loss-capital", { opacity: 0, duration: 0.4 }, "stage3+=1.9")
     .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage3+=1.9")
     // Stage 3 -> 4c: the merged block splits into 15 equal (pro rata)
