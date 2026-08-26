@@ -118,7 +118,7 @@
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
-  <div id="stage-label">Stage 1 of 13 — CFP template, as published</div>
+  <div id="stage-label">Stage 1 of 14 — CFP template, as published</div>
 
   <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
     <!-- Outer container: Blended Finance Structure -->
@@ -203,7 +203,14 @@
          a continuation of the original solid box. Hidden until stage 11. -->
     <g id="new-funding" style="opacity:0">
       <rect class="new-funding-rect" x="56" y="142" width="90" height="60" rx="3"/>
-      <text x="101" y="176" text-anchor="middle" font-weight="600" font-size="12">New Funding</text>
+      <!-- Two lines (matching Private Capital's own name/subtext pattern)
+           since "New Funding (KOICA)" doesn't fit this box's width on one
+           line. Direct attribution here (vs. First-Loss Capital's softer
+           "incl. KOICA") since New Funding IS specifically KOICA's
+           incremental contribution, not a shared tranche with other
+           contributors. -->
+      <text x="101" y="168" text-anchor="middle" font-weight="600" font-size="12">New Funding</text>
+      <text x="101" y="186" text-anchor="middle" font-weight="600" font-size="11">(KOICA)</text>
     </g>
 
     <!-- New Funding -> Improved Livelihoods connector: one tier up from
@@ -595,57 +602,61 @@
   });
 
   tl.addLabel("stage5")
-    // Stage 5 -> 6: subtext crossfades from the original CFP wording to
-    // the corporate-buyers/CRU framing first, while the box is still
-    // fully visible — then Private Capital (now showing the new wording)
+    // Stage 5 -> 6: ONLY the subtext crossfades, from the original CFP
+    // wording to the corporate-buyers/CRU framing — nothing else moves.
+    // Split into its own stage (rather than bundled with the split/
+    // flyout that follows) so the label change itself is slow enough to
+    // actually notice instead of flashing by mid-animation.
+    .to("#private-capital-subtext-old", { opacity: 0, duration: 0.3 }, "stage5+=0.2")
+    .to("#private-capital-subtext-new", { opacity: 1, duration: 0.3 }, "stage5+=0.2")
+    .addLabel("stage6")
+    // Stage 6 -> 7: Private Capital (already showing the new wording)
     // splits into 15 equal pieces and flies to the portfolio grid,
     // landing as a distinct layer alongside (not merged into) each
     // project's SAF Capital slice. Mirrors the stage 4/5 split/flyout
     // pacing: source box fades as its slices appear, then the slices fly
     // out staggered.
-    .to("#private-capital-subtext-old", { opacity: 0, duration: 0.2 }, "stage5+=0.05")
-    .to("#private-capital-subtext-new", { opacity: 1, duration: 0.2 }, "stage5+=0.05")
-    .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage5+=0.3")
-    .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage5+=0.3")
-    .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage5+=0.7");
+    .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage6+=0.3")
+    .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage6+=0.3")
+    .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage6+=0.7");
 
   PROJECTS.forEach((p, i) => {
     tl.to(`#private-slice-${i}`, {
       attr: { x: p.privateX, y: p.privateY, width: p.privateW, height: p.privateH },
       duration: 0.9
-    }, `stage5+=${0.5 + i * 0.04}`);
+    }, `stage6+=${0.5 + i * 0.04}`);
   });
 
-  tl.addLabel("stage6")
-    // Stage 6 -> 7: TA Facility detaches into its own focused view. The
+  tl.addLabel("stage7")
+    // Stage 7 -> 8: TA Facility detaches into its own focused view. The
     // Blended Finance Structure framing and its label fade away, along
     // with the now-orphaned "pulled out" annotation (Private Capital
-    // itself already faded out back in stage 5->6 — everything else on
+    // itself already faded out back in stage 6->7 — everything else on
     // the capital side is already invisible by this point). The
     // portfolio grid stays exactly as it is; only the TA Facility box
     // itself moves, repositioning to sit beside where the pyramid
     // appears next.
-    .to("#outer-box, #outer-box-label, #pulled-out-note", { opacity: 0, duration: 0.6 }, "stage6+=0.1")
-    .to("#ta-facility", { y: 40, duration: 1 }, "stage6+=0.1")
-    .addLabel("stage7")
-    // Stage 7 -> 8: the 5-tier TA Facility pyramid fades in beside the
+    .to("#outer-box, #outer-box-label, #pulled-out-note", { opacity: 0, duration: 0.6 }, "stage7+=0.1")
+    .to("#ta-facility", { y: 40, duration: 1 }, "stage7+=0.1")
+    .addLabel("stage8")
+    // Stage 8 -> 9: the 5-tier TA Facility pyramid fades in beside the
     // detached TA Facility box, followed by a single connecting line/
     // arrow from the box to the pyramid's base (Agroforestry) tier —
     // the one link kept from the earlier (removed) connecting-lines plan,
     // showing the existing facility feeding that base tier. All five
     // tiers at equal visual weight — de-emphasizing individual tiers is
     // the next sub-stage.
-    .to("#ta-pyramid", { opacity: 1, duration: 0.8 }, "stage7+=0.2")
-    .to("#ta-pyramid-link", { opacity: 1, duration: 0.4 }, "stage7+=1.0")
-    .addLabel("stage8")
-    // Stage 8 -> 9: the upper three tiers (Local Adaptation, Regional
+    .to("#ta-pyramid", { opacity: 1, duration: 0.8 }, "stage8+=0.2")
+    .to("#ta-pyramid-link", { opacity: 1, duration: 0.4 }, "stage8+=1.0")
+    .addLabel("stage9")
+    // Stage 9 -> 10: the upper three tiers (Local Adaptation, Regional
     // Resilience, Global Mitigation) recede — a uniform opacity drop reads
     // as "still legible, clearly secondary" without changing any tier's
     // size/position/color values. Agroforestry and Improved Livelihoods
     // (untouched) stay at full weight throughout.
-    .to("#pyramid-tier3, #pyramid-tier4, #pyramid-tier5", { opacity: 0.35, duration: 0.6 }, "stage8+=0.2")
-    .addLabel("stage9")
-    // Stage 9 -> 10: TA Facility — detached since stage 6->7, untouched
+    .to("#pyramid-tier3, #pyramid-tier4, #pyramid-tier5", { opacity: 0.35, duration: 0.6 }, "stage9+=0.2")
+    .addLabel("stage10")
+    // Stage 10 -> 11: TA Facility — detached since stage 7->8, untouched
     // since — splits into 15 equal pieces and flies to the portfolio
     // grid, landing as a small bordered box (same box-rect style as the
     // top-level TA Facility box) beside each project's capital column —
@@ -656,46 +667,46 @@
     // fades out in the same beat as the TA Facility box itself, since
     // once it's split into 15 pieces there's no single box left for that
     // line to originate from — an orphaned arrow pointing at nothing.
-    // Mirrors the stage 5/6 split/flyout pacing: source box fades as its
+    // Mirrors the stage 6/7 split/flyout pacing: source box fades as its
     // pieces appear, then the pieces fly out staggered; each piece's "TA"
     // label only fades in once that piece has landed (labels don't fly).
-    .to("#ta-facility, #ta-pyramid-link", { opacity: 0, duration: 0.3 }, "stage9+=0.3")
-    .to(".ta-piece-rect", { opacity: 1, duration: 0.3 }, "stage9+=0.3")
-    .to("#ta-piece-note", { opacity: 1, duration: 0.5 }, "stage9+=0.7");
+    .to("#ta-facility, #ta-pyramid-link", { opacity: 0, duration: 0.3 }, "stage10+=0.3")
+    .to(".ta-piece-rect", { opacity: 1, duration: 0.3 }, "stage10+=0.3")
+    .to("#ta-piece-note", { opacity: 1, duration: 0.5 }, "stage10+=0.7");
 
   PROJECTS.forEach((p, i) => {
     const start = 0.5 + i * 0.04;
     tl.to(`#ta-piece-rect-${i}`, {
       attr: { x: p.taX, y: p.taY, width: p.taW, height: p.taH },
       duration: 0.9
-    }, `stage9+=${start}`)
+    }, `stage10+=${start}`)
     .to(`#ta-piece-label-${i}`, {
       opacity: 1, duration: 0.3
-    }, `stage9+=${start + 0.9}`);
+    }, `stage10+=${start + 0.9}`);
   });
 
-  tl.addLabel("stage10")
-    // Stage 10 -> 11: a new, smaller "New Funding" box fades in at the
-    // same detached-focus spot the original TA Facility box occupied —
+  tl.addLabel("stage11")
+    // Stage 11 -> 12: a new, smaller "New Funding (KOICA)" box fades in at
+    // the same detached-focus spot the original TA Facility box occupied —
     // dashed border marks it as a distinct, additional stream, not a
     // continuation of the original (now-split) solid box.
-    .to("#new-funding", { opacity: 1, duration: 0.8 }, "stage10+=0.2")
-    .addLabel("stage11")
-    // Stage 11 -> 12: a dashed arrow — same blue, same arrowhead as the
+    .to("#new-funding", { opacity: 1, duration: 0.8 }, "stage11+=0.2")
+    .addLabel("stage12")
+    // Stage 12 -> 13: a dashed arrow — same blue, same arrowhead as the
     // TA link, but dashed to stay visually distinct — connects New
     // Funding to the Improved Livelihoods tier (one tier up from
     // Agroforestry, the TA link's target): the distinguishing point of
     // this funding stream.
-    .to("#new-funding-link", { opacity: 1, duration: 0.5 }, "stage11+=0.2")
-    .addLabel("stage12")
-    // Stage 12 -> 13: New Funding splits into exactly 2 pieces (not 15 —
+    .to("#new-funding-link", { opacity: 1, duration: 0.5 }, "stage12+=0.2")
+    .addLabel("stage13")
+    // Stage 13 -> 14: New Funding splits into exactly 2 pieces (not 15 —
     // the contrast with TA Facility's even split) and flies out to land
     // beside the existing TA piece at 2 of the 15 projects. The box and
     // its arrow fade together (same lesson as the TA link: once the box
     // is gone, an arrow still pointing from it would be orphaned).
-    // Mirrors the stage 9/10 split/flyout pacing at 2-piece scale.
-    .to("#new-funding, #new-funding-link", { opacity: 0, duration: 0.3 }, "stage12+=0.3")
-    .to(".nf-piece-rect", { opacity: 1, duration: 0.3 }, "stage12+=0.3");
+    // Mirrors the stage 10/11 split/flyout pacing at 2-piece scale.
+    .to("#new-funding, #new-funding-link", { opacity: 0, duration: 0.3 }, "stage13+=0.3")
+    .to(".nf-piece-rect", { opacity: 1, duration: 0.3 }, "stage13+=0.3");
 
   NEW_FUNDING_TARGETS.forEach((projectIndex, i) => {
     const p = PROJECTS[projectIndex];
@@ -703,30 +714,31 @@
     tl.to(`#nf-piece-rect-${i}`, {
       attr: { x: p.nfX, y: p.nfY, width: p.nfW, height: p.nfH },
       duration: 0.9
-    }, `stage12+=${start}`)
+    }, `stage13+=${start}`)
     .to(`#nf-piece-label-${i}`, {
       opacity: 1, duration: 0.3
-    }, `stage12+=${start + 0.9}`);
+    }, `stage13+=${start + 0.9}`);
   });
 
-  tl.to("#nf-note", { opacity: 1, duration: 0.5 }, "stage12+=2.0")
-    .addLabel("stage13");
+  tl.to("#nf-note", { opacity: 1, duration: 0.5 }, "stage13+=2.0")
+    .addLabel("stage14");
 
-  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8", "stage9", "stage10", "stage11", "stage12", "stage13"];
+  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8", "stage9", "stage10", "stage11", "stage12", "stage13", "stage14"];
   const stageText = {
-    stage1: "Stage 1 of 13 — CFP template, as published",
-    stage2: "Stage 2 of 13 — Private Capital pulled out of the Blended Finance Structure",
-    stage3: "Stage 3 of 13 — Senior Debt / Junior Debt fill the vacated column",
-    stage4: "Stage 4 of 13 — Portfolio grid appears: 15 projects",
-    stage5: "Stage 5 of 13 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
-    stage6: "Stage 6 of 13 — Private Capital splits pro rata, layering local capital onto each project",
-    stage7: "Stage 7 of 13 — Technical Assistance Facility detaches into its own focused view",
-    stage8: "Stage 8 of 13 — TA Facility's 5-tier Theory of Change pyramid appears",
-    stage9: "Stage 9 of 13 — Upper three pyramid tiers recede, keeping focus on the base",
-    stage10: "Stage 10 of 13 — TA Facility splits pro rata, reaching all 15 projects evenly",
-    stage11: "Stage 11 of 13 — New Funding box appears beside the pyramid",
-    stage12: "Stage 12 of 13 — New Funding arrow connects to the Improved Livelihoods tier",
-    stage13: "Stage 13 of 13 — New Funding splits in two, reaching 2 of the 15 projects"
+    stage1: "Stage 1 of 14 — CFP template, as published",
+    stage2: "Stage 2 of 14 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 14 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 14 — Portfolio grid appears: 15 projects",
+    stage5: "Stage 5 of 14 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
+    stage6: "Stage 6 of 14 — Private Capital label updates to corporate buyers purchasing CRUs",
+    stage7: "Stage 7 of 14 — Private Capital splits pro rata, layering local capital onto each project",
+    stage8: "Stage 8 of 14 — Technical Assistance Facility detaches into its own focused view",
+    stage9: "Stage 9 of 14 — TA Facility's 5-tier Theory of Change pyramid appears",
+    stage10: "Stage 10 of 14 — Upper three pyramid tiers recede, keeping focus on the base",
+    stage11: "Stage 11 of 14 — TA Facility splits pro rata, reaching all 15 projects evenly",
+    stage12: "Stage 12 of 14 — New Funding box appears beside the pyramid",
+    stage13: "Stage 13 of 14 — New Funding arrow connects to the Improved Livelihoods tier",
+    stage14: "Stage 14 of 14 — New Funding splits in two, reaching 2 of the 15 projects"
   };
 
   let current = 0;
