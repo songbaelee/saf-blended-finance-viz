@@ -122,9 +122,10 @@
       <text x="345" y="116" class="box-label" font-size="12">Junior Debt</text>
     </g>
 
-    <!-- SAF Capital: Senior Debt / Junior Debt visually merge into this
-         single undifferentiated block in stage 4, before splitting
-         pro rata across the 15 project boxes. Hidden until then. -->
+    <!-- SAF Capital: Senior Debt, Junior Debt, and First-Loss Capital all
+         visually merge into this single undifferentiated block in stage 4,
+         before splitting pro rata across the 15 project boxes. Hidden
+         until then. -->
     <g id="saf-capital-merged" style="opacity:0">
       <rect class="box-rect" x="190" y="65" width="310" height="60" rx="3"/>
       <text x="345" y="99" class="box-label">SAF Capital</text>
@@ -261,17 +262,23 @@
     // Stage 3 -> 4a: the 15 project boxes appear to the right.
     .to("#portfolio-label", { opacity: 1, duration: 0.5 }, "stage3+=0.1")
     .to(".project-box", { opacity: 1, duration: 0.6, stagger: 0.03 }, "stage3+=0.1")
-    // Stage 3 -> 4b: Senior Debt / Junior Debt converge and crossfade
-    // into a single undifferentiated "SAF Capital" block.
+    // Stage 3 -> 4b: Senior Debt, Junior Debt, AND First-Loss Capital all
+    // converge and crossfade into a single undifferentiated "SAF Capital"
+    // block. First-Loss Capital starts lower and has further to travel,
+    // so it sets off earlier and takes longer, arriving on the same beat
+    // Senior/Junior have already met on (they're closer together and
+    // converge first; First-Loss catches up to complete the three-way
+    // merge).
     .to("#senior-debt", { y: 17, duration: 0.6 }, "stage3+=1.1")
     .to("#junior-debt", { y: -17, duration: 0.6 }, "stage3+=1.1")
-    .to("#senior-debt, #junior-debt", { opacity: 0, duration: 0.4 }, "stage3+=1.7")
-    .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage3+=1.7")
+    .to("#first-loss-capital", { y: -75, duration: 1.0 }, "stage3+=0.9")
+    .to("#senior-debt, #junior-debt, #first-loss-capital", { opacity: 0, duration: 0.4 }, "stage3+=1.9")
+    .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage3+=1.9")
     // Stage 3 -> 4c: the merged block splits into 15 equal (pro rata)
     // slices, which fly out to land inside their project box.
-    .to("#saf-capital-merged", { opacity: 0, duration: 0.3 }, "stage3+=2.4")
-    .to(".saf-slice", { opacity: 1, duration: 0.3 }, "stage3+=2.4")
-    .to("#prorata-note", { opacity: 1, duration: 0.5 }, "stage3+=2.8");
+    .to("#saf-capital-merged", { opacity: 0, duration: 0.3 }, "stage3+=2.6")
+    .to(".saf-slice", { opacity: 1, duration: 0.3 }, "stage3+=2.6")
+    .to("#prorata-note", { opacity: 1, duration: 0.5 }, "stage3+=3.0");
 
   PROJECTS.forEach((p, i) => {
     // attr:{} is required here — plain x/y/width/height on a <rect>
@@ -279,7 +286,7 @@
     tl.to(`#saf-slice-${i}`, {
       attr: { x: p.sliceX, y: p.sliceY, width: p.sliceW, height: p.sliceH },
       duration: 0.9
-    }, `stage3+=${2.6 + i * 0.04}`);
+    }, `stage3+=${2.8 + i * 0.04}`);
   });
 
   tl.addLabel("stage4");
