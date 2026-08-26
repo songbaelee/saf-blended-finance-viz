@@ -84,6 +84,12 @@
     stroke-width:1;
     stroke-dasharray:2,1.5;
   }
+  .koica-inset-rect{
+    fill:var(--bg);
+    stroke:var(--line);
+    stroke-width:1;
+    stroke-dasharray:3,2;
+  }
   .controls{
     margin-top:20px;
     display:flex;
@@ -235,7 +241,7 @@
     <g id="private-capital">
       <rect class="box-rect" x="190" y="65" width="310" height="68" rx="3"/>
       <text x="345" y="94" class="box-label">Private Capital</text>
-      <text x="345" y="112" class="box-label" font-size="11">(senior debt or equity)</text>
+      <text x="345" y="112" class="box-label" font-size="11">(corporate buyers purchasing CRUs)</text>
     </g>
 
     <!-- First-Loss Capital: attached directly beneath Private Capital (no
@@ -245,6 +251,22 @@
     <g id="first-loss-capital">
       <rect class="box-rect" x="190" y="133" width="310" height="67" rx="3"/>
       <text x="345" y="172" class="box-label">First-Loss Capital</text>
+      <!-- KOICA inset: a portion within First-Loss Capital, not the whole
+           tranche (other contributors are part of it too) — dashed,
+           lightly-shaded (--bg fill, not white) so it reads as a distinct
+           subsection rather than a continuation of the main box. No
+           dollar figures/percentages since exact numbers aren't final.
+           Nested inside first-loss-capital so it inherits that group's
+           later fade/nudge for free instead of needing its own tweens for
+           those. Positioned clear of the centered "First-Loss Capital"
+           label (which spans roughly x277-413 at the box's final,
+           post-resize size) and sized modestly against that final band
+           (170-200) — a portion of the box, not a claim on all of it.
+           Starts hidden; fades in as part of stage 2 -> 3's resize. -->
+      <g id="koica-inset" style="opacity:0">
+        <rect class="koica-inset-rect" x="198" y="176" width="72" height="18" rx="2"/>
+        <text x="234" y="188" text-anchor="middle" font-weight="600" font-size="7.5">incl. KOICA</text>
+      </g>
     </g>
 
     <!-- Annotation shown once Private Capital is pulled out. Sits below
@@ -517,8 +539,19 @@
     .to("#senior-debt text", { attr: { y: 92 }, duration: 0.8 }, "stage2+=0.1")
     .to("#junior-debt rect", { attr: { y: 117, height: 47 }, duration: 0.8 }, "stage2+=0.1")
     .to("#junior-debt text", { attr: { y: 144 }, duration: 0.8 }, "stage2+=0.1")
-    .to("#first-loss-capital rect", { attr: { y: 170, height: 30 }, duration: 0.8 }, "stage2+=0.1")
-    .to("#first-loss-capital text", { attr: { y: 189 }, duration: 0.8 }, "stage2+=0.1")
+    // Direct-child selectors ("> rect" / "> text"), not descendant
+    // selectors — the KOICA inset added below nests its own <rect>/<text>
+    // inside first-loss-capital too, and plain "#first-loss-capital rect"
+    // / "text" selectors would wrongly catch those as well and drag them
+    // into the main box's resize along with it.
+    .to("#first-loss-capital > rect", { attr: { y: 170, height: 30 }, duration: 0.8 }, "stage2+=0.1")
+    .to("#first-loss-capital > text", { attr: { y: 189 }, duration: 0.8 }, "stage2+=0.1")
+    // KOICA inset fades in as the resize settles — it's a fixed position
+    // within the box's final (post-resize) footprint, not itself
+    // attr-tweened, since that final position stays inside the box's
+    // bounds throughout the resize (the box only shrinks from the top;
+    // the inset sits in the lower portion of the final band).
+    .to("#koica-inset", { opacity: 1, duration: 0.4 }, "stage2+=0.4")
     .addLabel("stage3")
     // Stage 3 -> 4: the 15 project boxes appear to the right, on their own
     // beat. Nothing on the tranche side moves — this stage is just the
