@@ -100,7 +100,7 @@
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
-  <div id="stage-label">Stage 1 of 5 — CFP template, as published</div>
+  <div id="stage-label">Stage 1 of 6 — CFP template, as published</div>
 
   <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
     <!-- Outer container: Blended Finance Structure -->
@@ -141,15 +141,18 @@
          group is translated below the outer box (pulled out, not
          deleted — it reappears, redefined, in a later stage). -->
     <g id="private-capital">
-      <rect class="box-rect" x="190" y="65" width="310" height="60" rx="3"/>
-      <text x="345" y="90" class="box-label">Private Capital</text>
-      <text x="345" y="108" class="box-label" font-size="11">(senior debt or equity)</text>
+      <rect class="box-rect" x="190" y="65" width="310" height="68" rx="3"/>
+      <text x="345" y="94" class="box-label">Private Capital</text>
+      <text x="345" y="112" class="box-label" font-size="11">(senior debt or equity)</text>
     </g>
 
-    <!-- First-Loss Capital -->
+    <!-- First-Loss Capital: attached directly beneath Private Capital (no
+         gap between them) from stage 1 onward, matching the original CFP
+         Annex 2 diagram. Together the two fill the full 65-200 column,
+         same footprint the tranches redistribute across from stage 3. -->
     <g id="first-loss-capital">
-      <rect class="box-rect" x="190" y="140" width="310" height="60" rx="3"/>
-      <text x="345" y="175" class="box-label">First-Loss Capital</text>
+      <rect class="box-rect" x="190" y="133" width="310" height="67" rx="3"/>
+      <text x="345" y="172" class="box-label">First-Loss Capital</text>
     </g>
 
     <!-- Annotation shown once Private Capital is pulled out -->
@@ -197,13 +200,13 @@
     const y = GRID.startY + row * (GRID.boxH + GRID.gapY);
     PROJECTS.push({
       index: i, x, y,
-      // Private Capital slice (stage 5) — the top layer, both in position
-      // and stacking order (it's appended to the DOM after the SAF slice
+      // Private Capital slice — the top layer, both in position and
+      // stacking order (it's appended to the DOM after the SAF slice
       // below, so it paints on top too).
       privateX: x + 8, privateY: y + 19, privateW: GRID.boxW - 16, privateH: 10,
-      // SAF Capital slice (stage 4) — sits below Private Capital, same
-      // horizontal inset, not touching it.
-      sliceX: x + 8, sliceY: y + 34, sliceW: GRID.boxW - 16, sliceH: 11
+      // SAF Capital slice — sits directly beneath Private Capital, same
+      // horizontal inset, touching it with no gap (attached stacked pair).
+      sliceX: x + 8, sliceY: y + 29, sliceW: GRID.boxW - 16, sliceH: 11
     });
   }
 
@@ -319,10 +322,13 @@
     .to("#first-loss-capital rect", { attr: { y: 170, height: 30 }, duration: 0.8 }, "stage2+=0.1")
     .to("#first-loss-capital text", { attr: { y: 189 }, duration: 0.8 }, "stage2+=0.1")
     .addLabel("stage3")
-    // Stage 3 -> 4a: the 15 project boxes appear to the right.
+    // Stage 3 -> 4: the 15 project boxes appear to the right, on their own
+    // beat. Nothing on the tranche side moves — this stage is just the
+    // portfolio grid showing up; the merge happens in the next stage.
     .to("#portfolio-label", { opacity: 1, duration: 0.5 }, "stage3+=0.1")
     .to(".project-box", { opacity: 1, duration: 0.6, stagger: 0.03 }, "stage3+=0.1")
-    // Stage 3 -> 4b: Senior Debt, Junior Debt, AND First-Loss Capital all
+    .addLabel("stage4")
+    // Stage 4 -> 5a: Senior Debt, Junior Debt, AND First-Loss Capital all
     // converge and crossfade into a single undifferentiated "SAF Capital"
     // block that now spans their full combined footprint. The three
     // already tile that footprint contiguously (Junior anchors the middle;
@@ -330,15 +336,15 @@
     // Loss sets off earlier since it has to close a gap on top of being
     // further away), so only a small closing nudge is needed before the
     // crossfade into the single big block.
-    .to("#senior-debt", { y: 6, duration: 0.6 }, "stage3+=1.1")
-    .to("#first-loss-capital", { y: -6, duration: 1.0 }, "stage3+=0.9")
-    .to("#senior-debt, #junior-debt, #first-loss-capital", { opacity: 0, duration: 0.4 }, "stage3+=1.9")
-    .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage3+=1.9")
-    // Stage 3 -> 4c: the merged block splits into 15 equal (pro rata)
+    .to("#senior-debt", { y: 6, duration: 0.6 }, "stage4+=0.4")
+    .to("#first-loss-capital", { y: -6, duration: 1.0 }, "stage4+=0.2")
+    .to("#senior-debt, #junior-debt, #first-loss-capital", { opacity: 0, duration: 0.4 }, "stage4+=1.2")
+    .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage4+=1.2")
+    // Stage 4 -> 5b: the merged block splits into 15 equal (pro rata)
     // slices, which fly out to land inside their project box.
-    .to("#saf-capital-merged", { opacity: 0, duration: 0.3 }, "stage3+=2.6")
-    .to(".saf-slice", { opacity: 1, duration: 0.3 }, "stage3+=2.6")
-    .to("#prorata-note", { opacity: 1, duration: 0.5 }, "stage3+=3.0");
+    .to("#saf-capital-merged", { opacity: 0, duration: 0.3 }, "stage4+=1.9")
+    .to(".saf-slice", { opacity: 1, duration: 0.3 }, "stage4+=1.9")
+    .to("#prorata-note", { opacity: 1, duration: 0.5 }, "stage4+=2.3");
 
   PROJECTS.forEach((p, i) => {
     // attr:{} is required here — plain x/y/width/height on a <rect>
@@ -346,36 +352,37 @@
     tl.to(`#saf-slice-${i}`, {
       attr: { x: p.sliceX, y: p.sliceY, width: p.sliceW, height: p.sliceH },
       duration: 0.9
-    }, `stage3+=${2.8 + i * 0.04}`);
+    }, `stage4+=${2.1 + i * 0.04}`);
   });
 
-  tl.addLabel("stage4")
-    // Stage 4 -> 5: Private Capital — parked outside the structure since
+  tl.addLabel("stage5")
+    // Stage 5 -> 6: Private Capital — parked outside the structure since
     // stage 2, untouched since — splits into 15 equal pieces and flies to
     // the portfolio grid, landing as a distinct layer alongside (not
-    // merged into) each project's SAF Capital slice. Mirrors the stage 4
+    // merged into) each project's SAF Capital slice. Mirrors the stage 4/5
     // split/flyout pacing: source box fades as its slices appear, then
     // the slices fly out staggered.
-    .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage4+=0.3")
-    .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage4+=0.3")
-    .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage4+=0.7");
+    .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage5+=0.3")
+    .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage5+=0.3")
+    .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage5+=0.7");
 
   PROJECTS.forEach((p, i) => {
     tl.to(`#private-slice-${i}`, {
       attr: { x: p.privateX, y: p.privateY, width: p.privateW, height: p.privateH },
       duration: 0.9
-    }, `stage4+=${0.5 + i * 0.04}`);
+    }, `stage5+=${0.5 + i * 0.04}`);
   });
 
-  tl.addLabel("stage5");
+  tl.addLabel("stage6");
 
-  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5"];
+  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6"];
   const stageText = {
-    stage1: "Stage 1 of 5 — CFP template, as published",
-    stage2: "Stage 2 of 5 — Private Capital pulled out of the Blended Finance Structure",
-    stage3: "Stage 3 of 5 — Senior Debt / Junior Debt fill the vacated column",
-    stage4: "Stage 4 of 5 — Portfolio split: SAF capital divides pro rata across 15 projects",
-    stage5: "Stage 5 of 5 — Private Capital splits pro rata, layering local capital onto each project"
+    stage1: "Stage 1 of 6 — CFP template, as published",
+    stage2: "Stage 2 of 6 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 6 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 6 — Portfolio grid appears: 15 projects",
+    stage5: "Stage 5 of 6 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
+    stage6: "Stage 6 of 6 — Private Capital splits pro rata, layering local capital onto each project"
   };
 
   let current = 0;
