@@ -155,13 +155,16 @@
       <text x="345" y="172" class="box-label">First-Loss Capital</text>
     </g>
 
-    <!-- Annotation shown once Private Capital is pulled out -->
-    <text id="pulled-out-note" x="345" y="325" font-size="11" fill="#5B6B6E" text-anchor="middle" style="opacity:0">(pulled out — moved outside the Blended Finance Structure)</text>
+    <!-- Annotation shown once Private Capital is pulled out. Sits below
+         the pulled-out box's bottom edge (y65+68+185=318) with clear
+         space, not flush against its border. -->
+    <text id="pulled-out-note" x="345" y="340" font-size="11" fill="#5B6B6E" text-anchor="middle" style="opacity:0">(pulled out — moved outside the Blended Finance Structure)</text>
   </svg>
 
   <div class="controls">
     <button id="prev-btn" disabled>&larr; Prev</button>
     <button id="next-btn">Next &rarr;</button>
+    <button id="reset-btn" disabled>Reset</button>
   </div>
 </div>
 
@@ -202,10 +205,16 @@
       index: i, x, y,
       // Private Capital slice — the top layer, both in position and
       // stacking order (it's appended to the DOM after the SAF slice
-      // below, so it paints on top too).
-      privateX: x + 8, privateY: y + 19, privateW: GRID.boxW - 16, privateH: 10,
+      // below, so it paints on top too). Its rect is inset by half the
+      // class's 1px stroke on each side (x+0.5, width-1) — .private-slice
+      // has a visible stroke while .saf-slice is fill-only, and an SVG
+      // stroke straddles the path, so without this the stroke would make
+      // the private bar render ~1px wider than the SAF bar even though
+      // both share the same underlying x/width formula.
+      privateX: x + 8.5, privateY: y + 19, privateW: GRID.boxW - 17, privateH: 10,
       // SAF Capital slice — sits directly beneath Private Capital, same
-      // horizontal inset, touching it with no gap (attached stacked pair).
+      // visual horizontal edges (see privateX/privateW above), touching
+      // it with no gap (attached stacked pair).
       sliceX: x + 8, sliceY: y + 29, sliceW: GRID.boxW - 16, sliceH: 11
     });
   }
@@ -234,7 +243,7 @@
   });
   prorataNote.id = "prorata-note";
   prorataNote.style.opacity = 0;
-  prorataNote.textContent = "(pro rata split shown for both tranches — Senior Debt's behavior at project level is to confirm)";
+  prorataNote.textContent = "(pro rata split shown for both tranches)";
   diagram.appendChild(prorataNote);
 
   // Stage 5 clarifying note, stacked below the pro-rata note (not
@@ -389,11 +398,13 @@
   const stageLabelEl = document.getElementById("stage-label");
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
+  const resetBtn = document.getElementById("reset-btn");
 
   function render() {
     stageLabelEl.textContent = stageText[stages[current]];
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === stages.length - 1;
+    resetBtn.disabled = current === 0;
   }
 
   prevBtn.addEventListener("click", () => {
@@ -407,6 +418,15 @@
     if (current === stages.length - 1) return;
     current++;
     tl.tweenTo(stages[current]);
+    render();
+  });
+
+  // Jumps straight back to stage 1 (instant, not an animated rewind
+  // through every stage in between) rather than clicking Prev repeatedly.
+  resetBtn.addEventListener("click", () => {
+    if (current === 0) return;
+    current = 0;
+    tl.seek(stages[current]);
     render();
   });
 
