@@ -72,6 +72,18 @@
     stroke:var(--line);
     stroke-width:1;
   }
+  .new-funding-rect{
+    fill:var(--box-fill);
+    stroke:var(--line);
+    stroke-width:1.5;
+    stroke-dasharray:6,4;
+  }
+  .nf-piece-rect{
+    fill:var(--box-fill);
+    stroke:var(--line);
+    stroke-width:1;
+    stroke-dasharray:2,1.5;
+  }
   .controls{
     margin-top:20px;
     display:flex;
@@ -100,7 +112,7 @@
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
-  <div id="stage-label">Stage 1 of 10 — CFP template, as published</div>
+  <div id="stage-label">Stage 1 of 13 — CFP template, as published</div>
 
   <svg id="diagram" viewBox="0 0 1100 350" xmlns="http://www.w3.org/2000/svg">
     <!-- Outer container: Blended Finance Structure -->
@@ -178,6 +190,23 @@
     </defs>
     <line id="ta-pyramid-link" x1="166" y1="172" x2="220" y2="219" stroke="#2F6FA8" stroke-width="1.5" marker-end="url(#ta-link-arrow)" style="opacity:0"/>
 
+    <!-- New Funding: a second, smaller, dashed-border box appearing at
+         the same detached-focus spot the original TA Facility box
+         occupied (before it split into 15) — deliberately smaller and
+         dashed so it reads as a distinct, additional stream rather than
+         a continuation of the original solid box. Hidden until stage 11. -->
+    <g id="new-funding" style="opacity:0">
+      <rect class="new-funding-rect" x="56" y="142" width="90" height="60" rx="3"/>
+      <text x="101" y="176" text-anchor="middle" font-weight="600" font-size="12">New Funding</text>
+    </g>
+
+    <!-- New Funding -> Improved Livelihoods connector: one tier up from
+         Agroforestry (the TA Facility link's target) — the distinguishing
+         point of this funding stream. Dashed shaft (vs. the solid
+         ta-pyramid-link) keeps it visually distinct while reusing the
+         same blue and the same arrowhead marker. Hidden until stage 12. -->
+    <line id="new-funding-link" x1="146" y1="172" x2="258" y2="190" stroke="#2F6FA8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ta-link-arrow)" style="opacity:0"/>
+
     <!-- Senior Debt / Junior Debt: fill the column Private Capital
          vacates, stacked (mirroring how Private Capital sat stacked
          above First-Loss Capital). Hidden (opacity 0) until stage 3. -->
@@ -242,7 +271,10 @@
   const svgNS = "http://www.w3.org/2000/svg";
   const diagram = document.getElementById("diagram");
 
-  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 46, gapX: 14, gapY: 14, startX: 560, startY: 65 };
+  // boxH has extra headroom below the TA piece (42-56) for the New
+  // Funding piece at the 2 projects that get one — unused space at the
+  // other 13, kept uniform across all 15 so the grid stays even.
+  const GRID = { cols: 5, rows: 3, boxW: 90, boxH: 58, gapX: 14, gapY: 14, startX: 560, startY: 65 };
   // Matches saf-capital-merged's full-column footprint (see markup) so the
   // pre-flyout strips fill the same size block they're splitting from.
   const SLICE_ORIGIN = { x: 190, y: 65, w: 310, h: 135 };
@@ -257,6 +289,13 @@
   // for the stage-10 TA pieces.
   const TA_ORIGIN = { x: 36, y: 65 + 40, w: 130, h: 135 };
   const taSliceWidth = TA_ORIGIN.w / 15;
+  // New Funding's own resting footprint (stage 11 onward) — used as the
+  // fly-out origin for its stage-13 split into 2 pieces.
+  const NEW_FUNDING_ORIGIN = { x: 56, y: 142, w: 90, h: 60 };
+  const nfSliceWidth = NEW_FUNDING_ORIGIN.w / 2;
+  // The 2 of 15 projects New Funding reaches — picked arbitrarily,
+  // per the brief ("doesn't matter which").
+  const NEW_FUNDING_TARGETS = [2, 8]; // Project 3, Project 9
   const gridRight = GRID.startX + GRID.cols * (GRID.boxW + GRID.gapX) - GRID.gapX;
   const gridBottom = GRID.startY + GRID.rows * (GRID.boxH + GRID.gapY) - GRID.gapY;
 
@@ -285,7 +324,12 @@
       // band above/below it), sitting to the left of the capital column
       // with a 4px gap — not touching, not overlapping.
       taX: x + 6, taY: y + 18, taW: 20, taH: 22,
-      taLabelX: x + 16, taLabelY: y + 32
+      taLabelX: x + 16, taLabelY: y + 32,
+      // New Funding piece — only used at the 2 target projects, stacked
+      // below the TA piece in the same left column (2px gap, not
+      // touching/overlapping it), same dashed treatment as the source box.
+      nfX: x + 6, nfY: y + 42, nfW: 20, nfH: 14,
+      nfLabelX: x + 16, nfLabelY: y + 52
     });
   }
 
@@ -339,6 +383,18 @@
   taNote.style.opacity = 0;
   taNote.textContent = "(small bordered box: existing TA Facility support, reaching all 15 projects evenly — not a capital instrument)";
   diagram.appendChild(taNote);
+
+  // Stage 13 clarifying note, stacked below the other three (not
+  // overlapping any): New Funding is a distinct, smaller stream reaching
+  // only 2 of the 15 projects, feeding the Livelihoods tier specifically.
+  const nfNote = svgEl("text", {
+    x: (GRID.startX + gridRight) / 2, y: gridBottom + 71,
+    "font-size": 11, fill: "#5B6B6E", "text-anchor": "middle"
+  });
+  nfNote.id = "nf-note";
+  nfNote.style.opacity = 0;
+  nfNote.textContent = "(New Funding — reaches 2 of 15 projects, feeding the Livelihoods tier)";
+  diagram.appendChild(nfNote);
 
   // 15 project boxes
   PROJECTS.forEach(p => {
@@ -407,6 +463,30 @@
     label.id = `ta-piece-label-${p.index}`;
     label.style.opacity = 0;
     label.textContent = "TA";
+    diagram.appendChild(label);
+  });
+
+  // 2 New Funding pieces (only at NEW_FUNDING_TARGETS, not all 15) — same
+  // split/flyout/label-reveal mechanic as the TA pieces, dashed style
+  // (nf-piece-rect) throughout to match the source box's dashed treatment.
+  NEW_FUNDING_TARGETS.forEach((projectIndex, i) => {
+    const p = PROJECTS[projectIndex];
+    const rect = svgEl("rect", {
+      class: "nf-piece-rect",
+      x: NEW_FUNDING_ORIGIN.x + i * nfSliceWidth, y: NEW_FUNDING_ORIGIN.y,
+      width: nfSliceWidth, height: NEW_FUNDING_ORIGIN.h, rx: 2
+    });
+    rect.id = `nf-piece-rect-${i}`;
+    rect.style.opacity = 0;
+    diagram.appendChild(rect);
+
+    const label = svgEl("text", {
+      x: p.nfLabelX, y: p.nfLabelY, "text-anchor": "middle",
+      "font-weight": "700", "font-size": 9
+    });
+    label.id = `nf-piece-label-${i}`;
+    label.style.opacity = 0;
+    label.textContent = "+";
     diagram.appendChild(label);
   });
 
@@ -549,20 +629,59 @@
     }, `stage9+=${start + 0.9}`);
   });
 
-  tl.addLabel("stage10");
+  tl.addLabel("stage10")
+    // Stage 10 -> 11: a new, smaller "New Funding" box fades in at the
+    // same detached-focus spot the original TA Facility box occupied —
+    // dashed border marks it as a distinct, additional stream, not a
+    // continuation of the original (now-split) solid box.
+    .to("#new-funding", { opacity: 1, duration: 0.8 }, "stage10+=0.2")
+    .addLabel("stage11")
+    // Stage 11 -> 12: a dashed arrow — same blue, same arrowhead as the
+    // TA link, but dashed to stay visually distinct — connects New
+    // Funding to the Improved Livelihoods tier (one tier up from
+    // Agroforestry, the TA link's target): the distinguishing point of
+    // this funding stream.
+    .to("#new-funding-link", { opacity: 1, duration: 0.5 }, "stage11+=0.2")
+    .addLabel("stage12")
+    // Stage 12 -> 13: New Funding splits into exactly 2 pieces (not 15 —
+    // the contrast with TA Facility's even split) and flies out to land
+    // beside the existing TA piece at 2 of the 15 projects. The box and
+    // its arrow fade together (same lesson as the TA link: once the box
+    // is gone, an arrow still pointing from it would be orphaned).
+    // Mirrors the stage 9/10 split/flyout pacing at 2-piece scale.
+    .to("#new-funding, #new-funding-link", { opacity: 0, duration: 0.3 }, "stage12+=0.3")
+    .to(".nf-piece-rect", { opacity: 1, duration: 0.3 }, "stage12+=0.3");
 
-  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8", "stage9", "stage10"];
+  NEW_FUNDING_TARGETS.forEach((projectIndex, i) => {
+    const p = PROJECTS[projectIndex];
+    const start = 0.6 + i * 0.1;
+    tl.to(`#nf-piece-rect-${i}`, {
+      attr: { x: p.nfX, y: p.nfY, width: p.nfW, height: p.nfH },
+      duration: 0.9
+    }, `stage12+=${start}`)
+    .to(`#nf-piece-label-${i}`, {
+      opacity: 1, duration: 0.3
+    }, `stage12+=${start + 0.9}`);
+  });
+
+  tl.to("#nf-note", { opacity: 1, duration: 0.5 }, "stage12+=2.0")
+    .addLabel("stage13");
+
+  const stages = ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6", "stage7", "stage8", "stage9", "stage10", "stage11", "stage12", "stage13"];
   const stageText = {
-    stage1: "Stage 1 of 10 — CFP template, as published",
-    stage2: "Stage 2 of 10 — Private Capital pulled out of the Blended Finance Structure",
-    stage3: "Stage 3 of 10 — Senior Debt / Junior Debt fill the vacated column",
-    stage4: "Stage 4 of 10 — Portfolio grid appears: 15 projects",
-    stage5: "Stage 5 of 10 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
-    stage6: "Stage 6 of 10 — Private Capital splits pro rata, layering local capital onto each project",
-    stage7: "Stage 7 of 10 — Technical Assistance Facility detaches into its own focused view",
-    stage8: "Stage 8 of 10 — TA Facility's 5-tier Theory of Change pyramid appears",
-    stage9: "Stage 9 of 10 — Upper three pyramid tiers recede, keeping focus on the base",
-    stage10: "Stage 10 of 10 — TA Facility splits pro rata, reaching all 15 projects evenly"
+    stage1: "Stage 1 of 13 — CFP template, as published",
+    stage2: "Stage 2 of 13 — Private Capital pulled out of the Blended Finance Structure",
+    stage3: "Stage 3 of 13 — Senior Debt / Junior Debt fill the vacated column",
+    stage4: "Stage 4 of 13 — Portfolio grid appears: 15 projects",
+    stage5: "Stage 5 of 13 — Portfolio split: SAF capital merges and divides pro rata across 15 projects",
+    stage6: "Stage 6 of 13 — Private Capital splits pro rata, layering local capital onto each project",
+    stage7: "Stage 7 of 13 — Technical Assistance Facility detaches into its own focused view",
+    stage8: "Stage 8 of 13 — TA Facility's 5-tier Theory of Change pyramid appears",
+    stage9: "Stage 9 of 13 — Upper three pyramid tiers recede, keeping focus on the base",
+    stage10: "Stage 10 of 13 — TA Facility splits pro rata, reaching all 15 projects evenly",
+    stage11: "Stage 11 of 13 — New Funding box appears beside the pyramid",
+    stage12: "Stage 12 of 13 — New Funding arrow connects to the Improved Livelihoods tier",
+    stage13: "Stage 13 of 13 — New Funding splits in two, reaching 2 of the 15 projects"
   };
 
   let current = 0;
