@@ -241,7 +241,15 @@
     <g id="private-capital">
       <rect class="box-rect" x="190" y="65" width="310" height="68" rx="3"/>
       <text x="345" y="94" class="box-label">Private Capital</text>
-      <text x="345" y="112" class="box-label" font-size="11">(corporate buyers purchasing CRUs)</text>
+      <!-- Two stacked subtext lines, crossfaded at the stage 5 -> 6
+           transition (right before the box itself fades/splits) rather
+           than a plain text swap — a plain textContent change wouldn't
+           reverse cleanly on Prev, since GSAP callbacks fire the same way
+           regardless of scrub direction, while opacity tweens interpolate
+           correctly both ways under tweenTo/seek. Original wording shown
+           stages 1-5; new wording from stage 6 onward. -->
+      <text id="private-capital-subtext-old" x="345" y="112" class="box-label" font-size="11">(senior debt or equity)</text>
+      <text id="private-capital-subtext-new" x="345" y="112" class="box-label" font-size="11" style="opacity:0">(corporate buyers purchasing CRUs)</text>
     </g>
 
     <!-- First-Loss Capital: attached directly beneath Private Capital (no
@@ -587,12 +595,16 @@
   });
 
   tl.addLabel("stage5")
-    // Stage 5 -> 6: Private Capital — parked outside the structure since
-    // stage 2, untouched since — splits into 15 equal pieces and flies to
-    // the portfolio grid, landing as a distinct layer alongside (not
-    // merged into) each project's SAF Capital slice. Mirrors the stage 4/5
-    // split/flyout pacing: source box fades as its slices appear, then
-    // the slices fly out staggered.
+    // Stage 5 -> 6: subtext crossfades from the original CFP wording to
+    // the corporate-buyers/CRU framing first, while the box is still
+    // fully visible — then Private Capital (now showing the new wording)
+    // splits into 15 equal pieces and flies to the portfolio grid,
+    // landing as a distinct layer alongside (not merged into) each
+    // project's SAF Capital slice. Mirrors the stage 4/5 split/flyout
+    // pacing: source box fades as its slices appear, then the slices fly
+    // out staggered.
+    .to("#private-capital-subtext-old", { opacity: 0, duration: 0.2 }, "stage5+=0.05")
+    .to("#private-capital-subtext-new", { opacity: 1, duration: 0.2 }, "stage5+=0.05")
     .to("#private-capital", { opacity: 0, duration: 0.3 }, "stage5+=0.3")
     .to(".private-slice", { opacity: 1, duration: 0.3 }, "stage5+=0.3")
     .to("#private-capital-note", { opacity: 1, duration: 0.5 }, "stage5+=0.7");
