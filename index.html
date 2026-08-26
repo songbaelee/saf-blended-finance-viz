@@ -115,37 +115,45 @@
       <text x="101" y="156" class="box-label">Facility</text>
     </g>
 
-    <!-- TA Facility's 5-tier Theory of Change pyramid (Acorn-style):
-         narrower toward the apex, true triangular taper, with the top
-         tier collapsing to an actual point (3-point polygon) rather than
-         a flat-topped trapezoid — a real pyramid silhouette, not a bar
-         stack. Appears beside the detached TA Facility box (stage 8),
-         hidden until then. All five tiers share identical fill/stroke
-         (box-rect) and no class on the labels — a class="box-label"
-         font-size override gets beaten by the .box-label CSS rule's own
-         font-size, which would blow the tiny apex text back up to 13px,
-         so size/weight/anchor are set directly as attributes here
-         instead. Scale is folded into the top three tiers' names
-         (Global/Regional/Local), so no separate scale-prefix labels. -->
+    <!-- TA Facility's 5-tier Theory of Change pyramid (Acorn-style).
+         Geometry: ONE triangle first — apex (350,65), base corners
+         (210,235)/(490,235) — sliced into 5 equal-height horizontal
+         bands (34px each). Both outer edges are a single straight line
+         at constant slope (half-width = 140*(y-65)/170, i.e. 0.8235px
+         of half-width — 1.647px of total width — per row) all the way
+         from apex to base; tier boundaries are just horizontal cuts
+         across that one line, not separately-angled shapes stacked on
+         each other (that was the earlier bug: the apex tier was drawn
+         with its own steeper local slope instead of continuing the
+         frustum's line up to the true apex point). Appears beside the
+         detached TA Facility box (stage 8), hidden until then. All five
+         tiers share identical fill/stroke (box-rect) and no class on the
+         labels — a class="box-label" font-size override gets beaten by
+         the .box-label CSS rule's own font-size, which would blow the
+         tiny apex text back up to 13px, so size/weight/anchor are set
+         directly as attributes here instead. Scale is folded into the
+         top three tiers' names (Global/Regional/Local), so no separate
+         scale-prefix labels. -->
     <g id="ta-pyramid" style="opacity:0">
-      <polygon class="box-rect" points="210,235 490,235 466,201 234,201"/>
+      <polygon class="box-rect" points="210,235 490,235 462,201 238,201"/>
       <text x="350" y="222" text-anchor="middle" font-weight="600" font-size="12">Agroforestry</text>
 
-      <polygon class="box-rect" points="234,201 466,201 442,167 258,167"/>
+      <polygon class="box-rect" points="238,201 462,201 434,167 266,167"/>
       <text x="350" y="188" text-anchor="middle" font-weight="600" font-size="10">Improved Livelihoods</text>
 
-      <polygon class="box-rect" points="258,167 442,167 418,133 282,133"/>
+      <polygon class="box-rect" points="266,167 434,167 406,133 294,133"/>
       <text x="350" y="154" text-anchor="middle" font-weight="600" font-size="9">Local Adaptation</text>
 
-      <polygon class="box-rect" points="282,133 418,133 394,99 306,99"/>
-      <text x="350" y="120" text-anchor="middle" font-weight="600" font-size="9">Regional Resilience</text>
+      <polygon class="box-rect" points="294,133 406,133 378,99 322,99"/>
+      <text x="350" y="124" text-anchor="middle" font-weight="600" font-size="8">Regional Resilience</text>
 
-      <!-- Apex: true triangle (3 points, no flat top) — text sits in the
-           trapezoid's wider lower half since the pointed tip itself has
-           no room for it. -->
-      <polygon class="box-rect" points="306,99 394,99 350,65"/>
-      <text x="350" y="84" text-anchor="middle" font-weight="600" font-size="7">Global</text>
-      <text x="350" y="92" text-anchor="middle" font-weight="600" font-size="7">Mitigation</text>
+      <!-- Apex: true triangle (3 points, no flat top), base corners
+           (322,99)/(378,99) sitting exactly on the same line as every
+           tier below — text sits in the triangle's wider lower half
+           since the pointed tip itself has no room for it. -->
+      <polygon class="box-rect" points="322,99 378,99 350,65"/>
+      <text x="350" y="88" text-anchor="middle" font-weight="600" font-size="7">Global</text>
+      <text x="350" y="96" text-anchor="middle" font-weight="600" font-size="7">Mitigation</text>
     </g>
 
     <!-- Senior Debt / Junior Debt: fill the column Private Capital
