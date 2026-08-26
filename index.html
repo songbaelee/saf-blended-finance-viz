@@ -216,13 +216,18 @@
     <g id="new-funding" style="opacity:0">
       <rect class="new-funding-rect" x="56" y="142" width="90" height="60" rx="3"/>
       <!-- Two lines (matching Private Capital's own name/subtext pattern)
-           since "New Funding (KOICA)" doesn't fit this box's width on one
-           line. Direct attribution here (vs. First-Loss Capital's softer
-           "incl. KOICA") since New Funding IS specifically KOICA's
+           since "New TA Funding (KOICA)" doesn't fit this box's width on
+           one line. Direct attribution here (vs. First-Loss Capital's
+           softer "incl. KOICA") since New Funding IS specifically KOICA's
            incremental contribution, not a shared tranche with other
-           contributors. -->
-      <text x="101" y="168" text-anchor="middle" font-weight="600" font-size="12">New Funding</text>
-      <text x="101" y="186" text-anchor="middle" font-weight="600" font-size="11">(KOICA)</text>
+           contributors. "TA" is spelled out in the label (not just
+           "New Funding") so this doesn't read as the same KOICA
+           contribution as the First-Loss Capital inset elsewhere in the
+           sequence — they're two distinct uses of KOICA's total ask.
+           Font sized down from the original single-word version (12/11)
+           to 10/9 so the longer first line still fits the box width. -->
+      <text x="101" y="168" text-anchor="middle" font-weight="600" font-size="10">New TA Funding</text>
+      <text x="101" y="186" text-anchor="middle" font-weight="600" font-size="9">(KOICA)</text>
     </g>
 
     <!-- New Funding -> Improved Livelihoods connector: one tier up from
@@ -698,7 +703,7 @@
   });
 
   tl.addLabel("stage11")
-    // Stage 11 -> 12: a new, smaller "New Funding (KOICA)" box fades in at
+    // Stage 11 -> 12: a new, smaller "New TA Funding (KOICA)" box fades in at
     // the same detached-focus spot the original TA Facility box occupied —
     // dashed border marks it as a distinct, additional stream, not a
     // continuation of the original (now-split) solid box.
