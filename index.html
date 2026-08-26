@@ -123,9 +123,119 @@
     background:var(--line);
     color:#fff;
   }
+  /* Password gate — a casual-visitor deterrent only, not real access
+     control (documented, not something to harden further). Body starts
+     "locked" in the static markup; #pw-overlay covers the viewport and
+     .wrap is display:none until the correct password is entered or a
+     prior unlock is found in sessionStorage. */
+  body.locked .wrap{
+    display:none;
+  }
+  #pw-overlay{
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+  }
+  body:not(.locked) #pw-overlay{
+    display:none;
+  }
+  .pw-box{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:32px 36px;
+    max-width:320px;
+    width:90%;
+    text-align:center;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  .pw-box h2{
+    font-size:16px;
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  .pw-box p.pw-sub{
+    font-size:13px;
+    color:#5B6B6E;
+    margin:0 0 18px;
+  }
+  .pw-box input{
+    font-size:14px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    width:100%;
+    box-sizing:border-box;
+    margin-bottom:12px;
+    font-family:inherit;
+  }
+  .pw-box input:focus{
+    outline:2px solid var(--line);
+    outline-offset:1px;
+  }
+  .pw-box button{
+    width:100%;
+  }
+  .pw-error{
+    font-size:12.5px;
+    color:#B3261E;
+    margin-top:10px;
+    min-height:16px;
+  }
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="pw-overlay">
+  <div class="pw-box">
+    <h2>Password required</h2>
+    <p class="pw-sub">Enter the password to view this diagram.</p>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="off">
+    <button id="pw-submit">Unlock</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+<script>
+  // Case-insensitive check against "CRS"; unlock is remembered for the
+  // rest of this browser session (sessionStorage), not persisted beyond
+  // it. Runs immediately (before the diagram script below) so a prior
+  // unlock is reflected before the user sees anything.
+  (function () {
+    const CORRECT = "crs";
+    const body = document.body;
+    const input = document.getElementById("pw-input");
+    const submitBtn = document.getElementById("pw-submit");
+    const errorEl = document.getElementById("pw-error");
+
+    function unlock() {
+      sessionStorage.setItem("saf-unlocked", "1");
+      body.classList.remove("locked");
+    }
+
+    function tryUnlock() {
+      if ((input.value || "").trim().toLowerCase() === CORRECT) {
+        errorEl.textContent = "";
+        unlock();
+      } else {
+        errorEl.textContent = "Incorrect password";
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    if (sessionStorage.getItem("saf-unlocked") === "1") {
+      unlock();
+    }
+
+    submitBtn.addEventListener("click", tryUnlock);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") tryUnlock();
+    });
+  })();
+</script>
 <div class="wrap">
   <h1>SAF Blended Finance Structure</h1>
   <p class="sub">Starting point: KOICA IPS Call for Proposals, Annex 2 — Model 2 (TA Facility variant)</p>
