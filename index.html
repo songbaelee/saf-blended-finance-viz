@@ -527,11 +527,14 @@
     // mirroring the CFP Annex 2 structure at miniature scale, not a band
     // above/below it. The pyramid stays exactly where it is — a
     // standalone explainer of what the aggregate TA Facility feeds into,
-    // not wired to each project-level piece. Mirrors the stage 5/6
-    // split/flyout pacing: source box fades as its pieces appear, then
-    // the pieces fly out staggered; each piece's "TA" label only fades
-    // in once that piece has landed (labels don't fly).
-    .to("#ta-facility", { opacity: 0, duration: 0.3 }, "stage9+=0.3")
+    // not wired to each project-level piece. The TA->Agroforestry link
+    // fades out in the same beat as the TA Facility box itself, since
+    // once it's split into 15 pieces there's no single box left for that
+    // line to originate from — an orphaned arrow pointing at nothing.
+    // Mirrors the stage 5/6 split/flyout pacing: source box fades as its
+    // pieces appear, then the pieces fly out staggered; each piece's "TA"
+    // label only fades in once that piece has landed (labels don't fly).
+    .to("#ta-facility, #ta-pyramid-link", { opacity: 0, duration: 0.3 }, "stage9+=0.3")
     .to(".ta-piece-rect", { opacity: 1, duration: 0.3 }, "stage9+=0.3")
     .to("#ta-piece-note", { opacity: 1, duration: 0.5 }, "stage9+=0.7");
 
