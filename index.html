@@ -101,6 +101,17 @@
     stroke-width:1;
     stroke-dasharray:3,2;
   }
+  /* Deliberately distinct from the KOICA-specific dashed markers above
+     (koica-inset-rect, new-funding-rect, nf-piece-rect) — all of those
+     use --line blue. This one uses a muted gray-blue and a different
+     dash rhythm so "all public capital" never reads as "another KOICA
+     marker" at a glance. */
+  .public-funding-outline{
+    fill:none;
+    stroke:#8A93A0;
+    stroke-width:1.5;
+    stroke-dasharray:4,3;
+  }
   .controls{
     margin-top:20px;
     display:flex;
@@ -411,6 +422,28 @@
       </g>
     </g>
 
+    <!-- Public Funding outline: wraps Senior Debt, Junior Debt, and
+         First-Loss Capital together (same 190-500 x 65-200 footprint the
+         three tranches tile, matching saf-capital-merged's own footprint,
+         just with a small outward margin so the dashed line doesn't sit
+         flush on the boxes' own borders) — stating outright a fact the
+         diagram has otherwise only implied: SAF's own capital stack is
+         entirely public (donor/DFI/MDB) capital, and Private Capital
+         (already pulled out and shown separately since stage 2) isn't
+         part of it. Appears once Senior/Junior settle into the column
+         (stage 2 -> 3) and fades out once the three merge into the single
+         "SAF Capital" block (stage 4), since that block already conveys
+         the same point on its own — the separate label becomes redundant
+         once it's one box instead of three. Label uses the boundary-tag
+         trick (a --bg-filled patch drawn over the top edge so the dashed
+         line doesn't run through the text) rather than an inset box, so
+         it doesn't compete with the KOICA inset's own box-in-box look. -->
+    <g id="public-funding-outline" style="opacity:0">
+      <rect class="public-funding-outline" x="184" y="59" width="322" height="147" rx="6"/>
+      <rect x="194" y="53" width="96" height="13" rx="2" fill="var(--bg)"/>
+      <text x="242" y="63" text-anchor="middle" font-weight="700" font-size="10" fill="#5B6B6E">Public Funding</text>
+    </g>
+
     <!-- Annotation shown once Private Capital is pulled out. Sits below
          the pulled-out box's bottom edge (y65+68+185=318) with clear
          space, not flush against its border. -->
@@ -694,6 +727,11 @@
     // bounds throughout the resize (the box only shrinks from the top;
     // the inset sits in the lower portion of the final band).
     .to("#koica-inset", { opacity: 1, duration: 0.4 }, "stage2+=0.4")
+    // Public Funding outline fades in right after (own beat, not stacked
+    // on the KOICA reveal) once Senior/Junior/First-Loss have settled
+    // into the column — static, doesn't move with the small convergence
+    // nudge in stage 4, just frames the three as a set until they merge.
+    .to("#public-funding-outline", { opacity: 1, duration: 0.4 }, "stage2+=0.5")
     .addLabel("stage3")
     // Stage 3 -> 4: the 15 project boxes appear to the right, on their own
     // beat. Nothing on the tranche side moves — this stage is just the
@@ -711,7 +749,11 @@
     // crossfade into the single big block.
     .to("#senior-debt", { y: 6, duration: 0.6 }, "stage4+=0.4")
     .to("#first-loss-capital", { y: -6, duration: 1.0 }, "stage4+=0.2")
-    .to("#senior-debt, #junior-debt, #first-loss-capital", { opacity: 0, duration: 0.4 }, "stage4+=1.2")
+    // Public Funding outline fades out in the same beat — once the three
+    // tranches merge into one block, "SAF Capital" already reads as
+    // public capital on its own; the separate outline/label would be
+    // redundant.
+    .to("#senior-debt, #junior-debt, #first-loss-capital, #public-funding-outline", { opacity: 0, duration: 0.4 }, "stage4+=1.2")
     .to("#saf-capital-merged", { opacity: 1, duration: 0.4 }, "stage4+=1.2")
     // Stage 4 -> 5b: the merged block splits into 15 equal (pro rata)
     // slices, which fly out to land inside their project box.
